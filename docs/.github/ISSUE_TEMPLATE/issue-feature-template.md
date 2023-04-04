@@ -9,8 +9,10 @@ assignees: ''
 
 ## Description
 설명을 작성하세요.
-## Todo
+
+## To Do
 - [ ] to do
 - [ ] to do
+
 ## Etc
 기타 사항
