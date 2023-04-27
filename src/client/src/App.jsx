@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { HelmetProvider } from "react-helmet-async";
-import Theme from "./styles/Theme.js";
+import theme from "./styles/theme.js";
 import GlobalStyle from "./styles/GlobalStyle.js";
 import routes from "./routes.js";
 import Home from "./pages/Home.jsx";
@@ -27,7 +27,7 @@ function AppRouter() {
 function App() {
   return (
     <HelmetProvider>
-      <ThemeProvider theme={Theme}>
+      <ThemeProvider theme={theme}>
         <GlobalStyle />
         <AppRouter />
       </ThemeProvider>
