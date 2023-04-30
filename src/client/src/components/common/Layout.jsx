@@ -22,6 +22,11 @@ const Container = styled.div`
 const Main = styled.main`
   width: 100vw;
   min-height: calc(100vh - 200px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 function Layout({ title, isLoggedIn, children }) {
