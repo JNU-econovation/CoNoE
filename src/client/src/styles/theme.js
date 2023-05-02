@@ -20,6 +20,7 @@ const theme = {
 
   border: {
     input: "1px solid #e8e8e8",
+    alert: "1px solid #eb5147",
   },
 };
 
