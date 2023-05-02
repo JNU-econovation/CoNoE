@@ -87,7 +87,7 @@ LabeledInput.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  value: PropTypes.any.isRequired,
+  value: PropTypes.string.isRequired,
   register: PropTypes.func.isRequired,
   valid: PropTypes.object,
   requireMessage: PropTypes.string,
@@ -95,6 +95,7 @@ LabeledInput.propTypes = {
 };
 
 LabeledInput.defaultProps = {
+  value: "",
   valid: undefined,
   requireMessage: undefined,
   errorMessage: undefined,
