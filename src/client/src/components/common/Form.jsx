@@ -40,7 +40,7 @@ function Form({ onSubmit, onError, defaultValues, inputInformations }) {
           type="submit"
           text="로그인"
           width="100%"
-          style={{ marginTop: "1.5rem" }}
+          style={{ marginTop: "1rem" }}
         />
       </StyledForm>
     </FormProvider>

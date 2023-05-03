@@ -11,7 +11,6 @@ function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path={routes.home} element={<Home />} />
-        <Route path={routes.login} element={<div>Login</div>} />
         <Route path={routes.register} element={<div>Register</div>} />
         <Route path={routes.myPage} element={<div>my page</div>} />
         <Route path={routes.room} element={<div>Room</div>} />
@@ -19,6 +18,7 @@ function AppRouter() {
         <Route path={routes.attendance} element={<div>Attendance</div>} />
         <Route path={routes.createRoom} element={<div>Create Room</div>} />
         <Route path={routes.manageRoom} element={<div>Manage Room</div>} />
+        <Route path="*" element={<div>error</div>} />
       </Routes>
     </BrowserRouter>
   );
