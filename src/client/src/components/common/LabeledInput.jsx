@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { useFormContext } from "react-hook-form";
 
 const Container = styled.div`
   width: 100%;
@@ -60,12 +61,11 @@ function LabeledInput({
   id,
   label,
   type,
-  value,
-  register,
   required,
   requireMessage,
   errorMessage,
 }) {
+  const { register, getValues } = useFormContext();
   return (
     <Container id={id}>
       <Label>{label}</Label>
@@ -77,7 +77,9 @@ function LabeledInput({
       {errorMessage ? (
         <Message className="error">{errorMessage}</Message>
       ) : (
-        !value && <Message className="require">{requireMessage}</Message>
+        !getValues(id) && (
+          <Message className="require">{requireMessage}</Message>
+        )
       )}
     </Container>
   );
@@ -87,18 +89,15 @@ LabeledInput.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  register: PropTypes.func.isRequired,
   valid: PropTypes.object,
   requireMessage: PropTypes.string,
   errorMessage: PropTypes.string,
 };
 
 LabeledInput.defaultProps = {
-  value: "",
   valid: undefined,
   requireMessage: undefined,
   errorMessage: undefined,
 };
 
-export default LabeledInput;
+export default React.memo(LabeledInput);
