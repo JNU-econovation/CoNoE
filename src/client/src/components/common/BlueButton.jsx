@@ -6,7 +6,7 @@ const Container = styled.button`
   height: 50px;
   background-color: ${({ theme }) => theme.color.main};
 
-  border: 1.5px solid ${({ theme }) => theme.color.main};
+  border: none;
   border-radius: 0.25rem;
 
   color: ${({ theme }) => theme.color.white};
@@ -15,16 +15,15 @@ const Container = styled.button`
   text-align: center;
 
   &:hover {
-    color: ${({ theme }) => theme.color.main};
-    background-color: ${({ theme }) => theme.color.white};
+    background-color: #1659bd;
   }
 
-  transition: all 0.25s ease-in-out;
+  transition: background-color 0.25s ease-in-out;
 `;
 
-function BlueButton({ text, width, onClick, style }) {
+function BlueButton({ text, width, onClick, style, type }) {
   return (
-    <Container style={{ width: width, ...style }} onClick={onClick}>
+    <Container type={type} style={{ width: width, ...style }} onClick={onClick}>
       {text}
     </Container>
   );
@@ -35,6 +34,7 @@ BlueButton.propTypes = {
   width: PropTypes.string,
   onClick: PropTypes.func,
   style: PropTypes.string,
+  type: PropTypes.string,
 };
 
 BlueButton.defaultProps = {
@@ -42,6 +42,7 @@ BlueButton.defaultProps = {
   width: "200px",
   onClick: () => {},
   style: "",
+  type: "",
 };
 
-export default BlueButton;
+export default React.memo(BlueButton);
