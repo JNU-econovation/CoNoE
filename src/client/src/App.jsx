@@ -5,13 +5,14 @@ import theme from "./styles/theme.js";
 import GlobalStyle from "./styles/GlobalStyle.js";
 import routes from "./routes.js";
 import Home from "./pages/Home.jsx";
+import SignUs from "./pages/SignUs.jsx";
 
 function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path={routes.home} element={<Home />} />
-        <Route path={routes.register} element={<div>Register</div>} />
+        <Route path={routes.register} element={<SignUs />} />
         <Route path={routes.myPage} element={<div>my page</div>} />
         <Route path={routes.room} element={<div>Room</div>} />
         <Route path={routes.myRoom} element={<div>My Room</div>} />

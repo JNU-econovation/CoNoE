@@ -33,7 +33,7 @@ BlueButton.propTypes = {
   text: PropTypes.string,
   width: PropTypes.string,
   onClick: PropTypes.func,
-  style: PropTypes.string,
+  style: PropTypes.object,
   type: PropTypes.string,
 };
 
@@ -41,7 +41,7 @@ BlueButton.defaultProps = {
   text: "버튼",
   width: "200px",
   onClick: () => {},
-  style: "",
+  style: {},
   type: "",
 };
 

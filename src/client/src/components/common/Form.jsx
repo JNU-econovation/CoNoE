@@ -10,7 +10,13 @@ const StyledForm = styled.form`
   width: 350px;
 `;
 
-function Form({ onSubmit, onError, defaultValues, inputInformations }) {
+function Form({
+  onSubmit,
+  onError,
+  defaultValues,
+  inputInformations,
+  buttonLabel,
+}) {
   const methods = useForm({
     mode: "onChange",
     defaultValues: defaultValues,
@@ -38,7 +44,7 @@ function Form({ onSubmit, onError, defaultValues, inputInformations }) {
 
         <BlueButton
           type="submit"
-          text="로그인"
+          text={buttonLabel}
           width="100%"
           style={{ marginTop: "1rem" }}
         />
@@ -60,6 +66,7 @@ Form.propTypes = {
       requireMessage: PropTypes.string,
     })
   ).isRequired,
+  buttonLabel: PropTypes.string.isRequired,
 };
 
 export default React.memo(Form);
