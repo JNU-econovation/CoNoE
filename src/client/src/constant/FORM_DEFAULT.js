@@ -5,6 +5,12 @@ const SIGN_US = {
   password: "",
 };
 
-Object.freeze(SIGN_US);
+const SIGN_IN = {
+  userId: "",
+  password: "",
+};
 
-export default { SIGN_US };
+Object.freeze(SIGN_US);
+Object.freeze(SIGN_IN);
+
+export default { SIGN_US, SIGN_IN };

@@ -46,5 +46,30 @@ const SIGN_US = [
   },
 ];
 
+const SIGN_IN = [
+  {
+    id: "userId",
+    label: "아이디",
+    type: "text",
+    required: {
+      required: "아이디를 입력해 주세요",
+    },
+  },
+  {
+    id: "password",
+    label: "비밀번호",
+    type: "password",
+    required: {
+      required: "비밀번호를 입력해 주세요",
+      minLength: { value: 8, message: "비밀번호는 8글자 이상입니다" },
+      pattern: {
+        value: /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/,
+        message: "비밀번호는 숫자와 영어를 1글자 이상 포함합니다",
+      },
+    },
+  },
+];
+
 Object.freeze(SIGN_US);
-export default { SIGN_US };
+Object.freeze(SIGN_IN);
+export default { SIGN_US, SIGN_IN };
