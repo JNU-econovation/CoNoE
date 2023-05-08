@@ -20,7 +20,7 @@ const StyledH3 = styled.h3`
 
 function SignUs() {
   return (
-    <Layout>
+    <Layout isLoggedIn={false}>
       <Container>
         <StyledH3>회원가입</StyledH3>
         <Form
