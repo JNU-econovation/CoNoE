@@ -1,5 +1,4 @@
 import React from "react";
-정;
 import Explanation from "./Explanation.jsx";
 import Form from "../common/Form.jsx";
 import RegisterPhrase from "./RegisterPhrase.jsx";
