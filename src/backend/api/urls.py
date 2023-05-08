@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
-from .views import RegisterAndObtainTokenView, RoomViewSet, TokenObtainPairView, AuthAPIView
+from .views import RegisterAndObtainTokenView, RoomViewSet, TokenObtainPairView, AuthAPIView, UsernameCheckAPIView
 
 
 
@@ -14,6 +14,8 @@ urlpatterns = router.urls
 # Authentications Urls
 urlpatterns += [
     path("user/create/", RegisterAndObtainTokenView.as_view(), name="create_user"),
+    
+    path("user/create/username/", UsernameCheckAPIView.as_view(), name="check_username"),
     
     # post - 로그인, delete - 로그아웃, get - 유저 정보
     path("user/login/", AuthAPIView.as_view(), name="login_user"),

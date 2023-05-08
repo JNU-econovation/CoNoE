@@ -11,13 +11,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView as OriginalObtain
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from group_call.settings import SECRET_KEY
 
-
 from .models import Room , User
 from .serializers import (
     RoomSerializer,
     TokenObtainPairSerializer,
     RegisterTokenSerializer,
-    EmailUniqueCheckSerializer,
     UsernameUniqueCheckSerializer,
     LoginSerializer,
     PasswordSerializer
@@ -44,44 +42,45 @@ class RegisterAndObtainTokenView(APIView):
     def post(self, request, format="json"):
         
         # username 중복 체크
-        id_serializer = UsernameUniqueCheckSerializer(data=request.data)
-        
-        # email 중복 체크
-        email_serializer = EmailUniqueCheckSerializer(data=request.data)
+        #id_serializer = UsernameUniqueCheckSerializer(data=request.data)
            
         pwd_serializer = PasswordSerializer(data=request.data) 
               
         if pwd_serializer.validate_password(pwd=request.data.get("password")) == False:    
             return Response("비밀번호는 영어와 숫자를 포함해야 하며, 8글자 이상이어야 합니다.", status=status.HTTP_400_BAD_REQUEST)
               
-              
-        # ID 유효성 검증에 통과 했을 때, ID가 중복되지 않았을 때 
-        if id_serializer.is_valid():
-            # email 유효성 검증에 통과 했을 때, nickname이 중복되지 않았을 때 
-            if email_serializer.is_valid():
-                serializer = RegisterTokenSerializer(data=request.data)                        
-                if serializer.is_valid(): 
-                    user = serializer.save() 
-                    if user:
-                        json = serializer.data
-                        return Response(json, status=status.HTTP_201_CREATED)
-            
-            # email 중복 되었을 때
-            else:
-                return Response("이미 존재하는 이메일입니다.", status=status.HTTP_400_BAD_REQUEST)
+        serializer = RegisterTokenSerializer(data=request.data)                        
+        if serializer.is_valid(): 
+            user = serializer.save() 
+            if user:
+                json = serializer.data
+                return Response(json, status=status.HTTP_201_CREATED)
 
-        # ID가 중복되었을 때 
+        
+class UsernameCheckAPIView(APIView):
+    """
+    Register user. Only Post method is allowed
+    """
+
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request, format="json"):
+        
+        # username 중복 체크
+        serializer = UsernameUniqueCheckSerializer(data=request.data)
+                                             
+        if serializer.is_valid(): 
+            json = serializer.data
+            return Response(json, status=status.HTTP_201_CREATED)
         else:
-            return Response("이미 존재하는 아이디입니다.", status=status.HTTP_400_BAD_REQUEST)
-
-        return Response("오류가 발생하였습니다.", status=status.HTTP_400_BAD_REQUEST)
-
+            return Response("아이디가 중복되었습니다.", status=status.HTTP_201_CREATED)
+        
 
 class AuthAPIView(APIView):
     
     permission_classes = [AllowAny]
 
-    
     # 유저 정보 확인
     def get(self, request):
         try:
@@ -155,6 +154,7 @@ class AuthAPIView(APIView):
         response.delete_cookie("refresh")
         return response
 
+
 class RoomViewSet(viewsets.ModelViewSet):
     """
     Rooms View
@@ -168,6 +168,7 @@ class RoomViewSet(viewsets.ModelViewSet):
         queryset = Room.objects.all().order_by("-created_on")
 
         # If search params is given then list matching the param is returned
+        # 찾고자하는 방이 있었으면, 해당 방을 최신 생성순으로 리턴해준다. 
         search = self.request.query_params.get("search", None)
         if search is not None:
             queryset = Room.objects.filter(title__icontains=search).order_by(
@@ -179,6 +180,7 @@ class RoomViewSet(viewsets.ModelViewSet):
         """
         Instantiates and returns the list of permissions that this view requires.
         """
+        # 만약 GET 요청일시 모두가 접근할 수 있게 하고 아니면 인증된 자만 접근될 수 있게 한다.
         if self.action == "list" or self.action == "retrieve":
             permission_classes = [AllowAny]
         else:
