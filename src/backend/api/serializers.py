@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from django.contrib.auth import authenticate
+from django.contrib.auth.password_validation import validate_password
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.password_validation import (
     validate_password as original_pwd_validate,
@@ -48,19 +49,6 @@ class RegisterTokenSerializer(serializers.ModelSerializer):
         instance = self.Meta.model.objects.create_user(**validated_data)
         return instance
 
-class PasswordSerializer(serializers.Serializer):
-    password = serializers.CharField(required = True)
-    
-    # Validates the password with django password validation
-    def validate_password(self, pwd):
-        
-        import re
-
-        pattern = re.compile(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,}$')
-
-        if not pattern.match(pwd):
-            return False
-            
 # 로그인 Serializer
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required = True)
@@ -83,22 +71,27 @@ class UsernameUniqueCheckSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username',)
+ 
+# 비밀번호를 정의하는 Serializer
+class PasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(required = True)
+    
+    # Validates the password with django password validation
+    def validate_password(self, pwd):
         
-# nickname 필드가 유일하다는 것을 확인하는 Serailizer
-class EmailUniqueCheckSerializer(serializers.ModelSerializer):
-    email = serializers.CharField(required=True, min_length=3, max_length=30, validators=[UniqueValidator(queryset=User.objects.all())])
+        import re
 
-    class Meta:
-        model = User
-        fields = ('email',)
+        pattern = re.compile(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,}$')
 
+        if not pattern.match(pwd):
+            return False
+            
 class RoomSerializer(serializers.ModelSerializer):
 
     """
     Room Serialiser
     """
-
-    room_id = serializers.SerializerMethodField()
+    
     created_on = serializers.DateTimeField(
         format="%a %I:%M %p, %d %b %Y", required=False
     )
@@ -109,14 +102,22 @@ class RoomSerializer(serializers.ModelSerializer):
             "id",
             "user",
             "title",
+            "password",
             "description",
-            "type_of",
             "created_on",
-            "room_id",
-        ]
-
-    # Generate room id
-    def get_room_id(self, obj):
-        if obj.type_of == "IO":
-            return "room" + str(uuid4().hex)
-        return "room" + str(obj.id)
+            ]
+        
+        
+    # 방 이전 비밀번호와 새로운 비밀번호 비교
+    def validate_password(self, obj, pk=None):
+        room_pwd = obj.password 
+        
+        room = Room.objects.get(pk=pk)
+        
+        # 방 이전 비밀번호와 새로운 비밀번호 비교
+        if room_pwd == room.password:
+            return obj 
+        
+        else:
+            return None
+        
