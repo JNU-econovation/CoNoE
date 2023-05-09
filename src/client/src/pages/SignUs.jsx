@@ -1,27 +1,17 @@
 import React from "react";
-import styled from "styled-components";
-import Layout from "../components/common/Layout.jsx";
-import Form from "../components/common/Form.jsx";
+
+import Layout from "../components/common/layout/Layout.jsx";
+import Form from "../components/common/form/Form.jsx";
+
+import StyledH3 from "../styles/StyledH3.js";
 import FORM_INFO from "../constant/FORM_INFO.js";
 import FORM_DEFAULT from "../constant/FORM_DEFAULT.js";
-
-const Container = styled.div`
-  width: 350px;
-`;
-
-const StyledH3 = styled.h3`
-  width: 100%;
-  margin-bottom: 2rem;
-  text-align: left;
-  font-weight: 700;
-  font-size: 2rem;
-  color: ${({ theme }) => theme.color.body};
-`;
+import FormPageContainer from "../styles/FormPageContainer.js";
 
 function SignUs() {
   return (
     <Layout isLoggedIn={false}>
-      <Container>
+      <FormPageContainer>
         <StyledH3>회원가입</StyledH3>
         <Form
           onSubmit={(data) => console.log(data)}
@@ -30,7 +20,7 @@ function SignUs() {
           defaultValues={FORM_DEFAULT.SIGN_US}
           buttonLabel="회원가입"
         />
-      </Container>
+      </FormPageContainer>
     </Layout>
   );
 }

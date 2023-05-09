@@ -6,6 +6,7 @@ import GlobalStyle from "./styles/GlobalStyle.js";
 import routes from "./routes.js";
 import Home from "./pages/Home.jsx";
 import SignUs from "./pages/SignUs.jsx";
+import CreateRoom from "./pages/CreateRoom.jsx";
 
 function AppRouter() {
   return (
@@ -17,7 +18,7 @@ function AppRouter() {
         <Route path={routes.room} element={<div>Room</div>} />
         <Route path={routes.myRoom} element={<div>My Room</div>} />
         <Route path={routes.attendance} element={<div>Attendance</div>} />
-        <Route path={routes.createRoom} element={<div>Create Room</div>} />
+        <Route path={routes.createRoom} element={<CreateRoom />} />
         <Route path={routes.manageRoom} element={<div>Manage Room</div>} />
         <Route path="*" element={<div>error</div>} />
       </Routes>
