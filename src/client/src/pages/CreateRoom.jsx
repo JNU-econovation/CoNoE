@@ -8,7 +8,7 @@ import FORM_INFO from "../constant/FORM_INFO.js";
 
 function CreateRoom() {
   return (
-    <Layout isLoggedIn={true}>
+    <Layout isLoggedIn={true} title="방 만들기">
       <FormPageContainer>
         <StyledH3>방 만들기</StyledH3>
         <Form
