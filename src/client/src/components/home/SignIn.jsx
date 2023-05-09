@@ -1,6 +1,6 @@
 import React from "react";
 import Explanation from "./Explanation.jsx";
-import Form from "../common/Form.jsx";
+import Form from "../common/form/Form.jsx";
 import RegisterPhrase from "./RegisterPhrase.jsx";
 
 import FORM_INFO from "../../constant/FORM_INFO.js";

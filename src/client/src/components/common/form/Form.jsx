@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import LabeledInput from "./LabeledInput.jsx";
-import BlueButton from "./BlueButton.jsx";
+import BlueButton from "../BlueButton.jsx";
 
 const StyledForm = styled.form`
   width: 350px;
@@ -36,7 +36,7 @@ function Form({
             id={info.id}
             label={info.label}
             type={info.type}
-            required={info?.required}
+            validation={info?.validation}
             errorMessage={errors[info.id] && errors[info.id]?.message}
             requireMessage={info?.requireMessage}
           />
@@ -62,7 +62,7 @@ Form.propTypes = {
       id: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
-      required: PropTypes.object,
+      validation: PropTypes.object,
       requireMessage: PropTypes.string,
     })
   ).isRequired,

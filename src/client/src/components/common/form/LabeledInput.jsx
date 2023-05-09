@@ -60,7 +60,7 @@ function LabeledInput({
   id,
   label,
   type,
-  required,
+  validation,
   requireMessage,
   errorMessage,
 }) {
@@ -71,7 +71,7 @@ function LabeledInput({
       <Input
         className={errorMessage && "error"}
         type={type}
-        {...register(id, required)}
+        {...register(id, validation)}
       />
       {errorMessage ? (
         <Message className="error">{errorMessage}</Message>
@@ -88,13 +88,13 @@ LabeledInput.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  valid: PropTypes.object,
+  validation: PropTypes.object,
   requireMessage: PropTypes.string,
   errorMessage: PropTypes.string,
 };
 
 LabeledInput.defaultProps = {
-  valid: undefined,
+  validation: undefined,
   requireMessage: undefined,
   errorMessage: undefined,
 };
