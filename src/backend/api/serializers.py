@@ -86,6 +86,7 @@ class PasswordSerializer(serializers.Serializer):
         if not pattern.match(pwd):
             return False
             
+# 방 Serializer
 class RoomSerializer(serializers.ModelSerializer):
 
     """
@@ -107,17 +108,12 @@ class RoomSerializer(serializers.ModelSerializer):
             "created_on",
             ]
         
-        
-    # 방 이전 비밀번호와 새로운 비밀번호 비교
-    def validate_password(self, obj, pk=None):
-        room_pwd = obj.password 
-        
-        room = Room.objects.get(pk=pk)
-        
-        # 방 이전 비밀번호와 새로운 비밀번호 비교
-        if room_pwd == room.password:
-            return obj 
-        
-        else:
-            return None
-        
+# 방 비밀번호 Serializer
+class RoomPasswordSerializer(serializers.Serializer):
+    
+    """
+    Room Password Serialiser
+    """
+    
+    password = serializers.CharField()
+
