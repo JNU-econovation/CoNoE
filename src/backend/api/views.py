@@ -13,6 +13,7 @@ from group_call.settings import SECRET_KEY
 
 from .models import Room , User
 from .serializers import (
+    RoomPasswordSerializer,
     RoomSerializer,
     TokenObtainPairSerializer,
     RegisterTokenSerializer,
@@ -207,3 +208,15 @@ class RoomViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+    
+    # 방 비밀번호 맞는지 틀리는지 반환    
+#    def retrieve(self, request, *args, **kwargs):
+#        instance = self.get_object()
+#        serializer = RoomPasswordSerializer(instance=instance.password)
+#        
+#        # 방 비밀번호와 입력받은 비밀번호가 같은지 검사
+#        if serializer.is_valid() and :
+#            return Response(serializer.data)
+##        
+#        else:
+

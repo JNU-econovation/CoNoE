@@ -51,23 +51,16 @@ class User(AbstractUser):
 
 
 class Room(models.Model):
-
+    
     """
     Room Model for group calling
     """
-
-    ROOM_TYPE = [
-        ("OTA", "Open to all"),
-        ("IO", "Invite only"),
-    ]
+    
+    # 방 이름, 방 비밀번호, 방을 만든 유저 이름, 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, blank=False)
+    password = models.CharField(max_length=15, blank=False)
     description = models.TextField(default="")
-    type_of = models.CharField(
-        max_length=3,
-        choices=ROOM_TYPE,
-        default="OTA",
-    )
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
