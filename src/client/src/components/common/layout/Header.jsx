@@ -3,8 +3,8 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
-import Logo from "./Logo.jsx";
-import routes from "../../routes.js";
+import Logo from "../Logo.jsx";
+import routes from "../../../routes.js";
 
 const Container = styled.header`
   width: 100%;

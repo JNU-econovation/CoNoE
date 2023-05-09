@@ -3,7 +3,7 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 
 import Header from "./Header.jsx";
-import PageTitle from "./PageTitle.jsx";
+import PageTitle from "../PageTitle.jsx";
 import Footer from "./Footer.jsx";
 
 const Container = styled.div`
