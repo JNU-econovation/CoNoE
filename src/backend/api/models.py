@@ -58,9 +58,10 @@ class Room(models.Model):
     
     # 방 이름, 방 비밀번호, 방을 만든 유저 이름, 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    username = models.CharField(max_length=20, blank=False, default="")
+    username = models.CharField(max_length=20, blank=False)
     title = models.CharField(max_length=200, blank=False)
-    password = models.CharField(max_length=15, blank=False, default="")
+    roomname = models.CharField(max_length=20, blank=False, unique=True, primary_key=True)
+    password = models.CharField(max_length=15, blank=False)
     description = models.TextField(default="")
     created_on = models.DateTimeField(auto_now_add=True)
 
@@ -69,5 +70,5 @@ class Room(models.Model):
 
     def save(self, *args, **kwargs):
         self.username = self.user.username
-
+        
         super().save(*args, **kwargs)
