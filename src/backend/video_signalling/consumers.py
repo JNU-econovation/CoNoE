@@ -38,6 +38,15 @@ class VideoConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
 
+        # Find and Send Room in User
+        if data["type"] == "get_rooms":
+            rooms = self.get_rooms()
+            response_data = {
+            "type": "room_list",
+            "rooms": rooms
+            }
+            await self.send(json.dumps(response_data))
+        
         # Checks user is valide user or not and added to USER_CONNECTED
         if data["type"] == "new_user_joined":
 
@@ -151,3 +160,5 @@ class VideoConsumer(AsyncWebsocketConsumer):
         return None
 
 
+    def get_rooms(self):
+        return [room["room_name"] for room in self.USERS_CONNECTED]
