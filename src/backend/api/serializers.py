@@ -49,6 +49,7 @@ class RegisterTokenSerializer(serializers.ModelSerializer):
         instance = self.Meta.model.objects.create_user(**validated_data)
         return instance
 
+
 # 로그인 Serializer
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required = True)
@@ -83,16 +84,18 @@ class PasswordSerializer(serializers.Serializer):
 
         pattern = re.compile(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,}$')
 
-        if not pattern.match(pwd):
-            return False
+        return bool(pattern.match(pwd))
+
             
-# 방 Serializer
 class RoomSerializer(serializers.ModelSerializer):
 
     """
-    Room Serialiser
+    Room Serializer
     """
     
+    user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())    
+    username = serializers.CharField(read_only=True)
+
     created_on = serializers.DateTimeField(
         format="%a %I:%M %p, %d %b %Y", required=False
     )
@@ -100,20 +103,11 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            "id",
+            "pk",
             "user",
+            "username",
             "title",
             "password",
             "description",
             "created_on",
             ]
-        
-# 방 비밀번호 Serializer
-class RoomPasswordSerializer(serializers.Serializer):
-    
-    """
-    Room Password Serialiser
-    """
-    
-    password = serializers.CharField()
-
