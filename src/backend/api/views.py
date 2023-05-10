@@ -86,7 +86,8 @@ class UsernameCheckAPIView(APIView):
 class AuthAPIView(APIView):
     
     permission_classes = [AllowAny]
-
+    lookup_field = 'roomname'
+    
     # 유저 정보 확인
     def get(self, request):
         try:
@@ -167,6 +168,8 @@ class RoomViewSet(viewsets.ModelViewSet):
     """
     queryset = Room.objects.all().order_by("-created_on")
     serializer_class = RoomSerializer
+    lookup_field = 'roomname'
+    lookup_url_kwarg = 'roomname'
 
     def get_queryset(self):
 
@@ -230,20 +233,26 @@ class RoomViewSet(viewsets.ModelViewSet):
             )
 
 
-        # 방 비밀번호 맞는지 틀리는지 반환    
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, roomname=None):
         password = request.GET.get('password')
-        
-        instance = Room.objects.get(pk=pk)
 
-        # 방 비밀번호와 입력받은 비밀번호가 같은지 검사
-        if instance.password == password:
-            serialized_data = serialize('json', [instance])
-            return HttpResponse(serialized_data, content_type="text/json-comment-filtered", status=status.HTTP_202_ACCEPTED)
-        else:
+        try:
+            instance = Room.objects.get(roomname=roomname)
+
+            if instance.password == password and instance.roomname == roomname:
+                serialized_data = serialize('json', [instance])
+                return HttpResponse(serialized_data, content_type="text/json-comment-filtered", status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(
+                    {
+                        "message": "비밀번호가 다릅니다.",
+                    },
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+        except Room.DoesNotExist:
             return Response(
                 {
-                    "message": "비밀번호가 다릅니다.",
+                    "message": "해당 아이디의 방을 찾을 수 없습니다.",
                 },
-                status=status.HTTP_401_UNAUTHORIZED
+                status=status.HTTP_404_NOT_FOUND
             )

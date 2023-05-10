@@ -103,7 +103,7 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            "pk",
+            "roomname",
             "user",
             "username",
             "title",
