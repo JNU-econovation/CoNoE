@@ -42,7 +42,7 @@ class User(AbstractUser):
     """User model."""
     # username과 password는 기본 구현되어있음.
     username = models.CharField(max_length=10, unique=True)
-    email = models.EmailField(_("email address"), unique=True)
+    email = models.EmailField(_("email address"))
     nickname = models.CharField(max_length= 10, blank=False)
 
     USERNAME_FIELD = "username"
@@ -51,17 +51,23 @@ class User(AbstractUser):
 
 
 class Room(models.Model):
-    
+
     """
     Room Model for group calling
     """
     
     # 방 이름, 방 비밀번호, 방을 만든 유저 이름, 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    username = models.CharField(max_length=20, blank=False, default="")
     title = models.CharField(max_length=200, blank=False)
-    password = models.CharField(max_length=15, blank=False)
+    password = models.CharField(max_length=15, blank=False, default="")
     description = models.TextField(default="")
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        self.username = self.user.username
+
+        super().save(*args, **kwargs)

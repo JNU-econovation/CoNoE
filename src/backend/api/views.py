@@ -1,8 +1,10 @@
 import jwt
 
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets, generics
 from django.contrib.auth import authenticate
+from django.core.serializers import serialize
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,7 +15,6 @@ from group_call.settings import SECRET_KEY
 
 from .models import Room , User
 from .serializers import (
-    RoomPasswordSerializer,
     RoomSerializer,
     TokenObtainPairSerializer,
     RegisterTokenSerializer,
@@ -49,14 +50,18 @@ class RegisterAndObtainTokenView(APIView):
               
         if pwd_serializer.validate_password(pwd=request.data.get("password")) == False:    
             return Response("비밀번호는 영어와 숫자를 포함해야 하며, 8글자 이상이어야 합니다.", status=status.HTTP_400_BAD_REQUEST)
-              
+        
         serializer = RegisterTokenSerializer(data=request.data)                        
-        if serializer.is_valid(): 
-            user = serializer.save() 
-            if user:
-                json = serializer.data
-                return Response(json, status=status.HTTP_201_CREATED)
-
+        
+        if not serializer.is_valid(): 
+            return Response("Error detected.", status=status.HTTP_500_INTERNAL_SERVER_ERROR) # 
+        
+        user = serializer.save() 
+        if not user:
+            return Response("Error detected.", status=status.HTTP_500_INTERNAL_SERVER_ERROR) # not user
+        
+        json = serializer.data
+        return Response(json, status=status.HTTP_201_CREATED)
         
 class UsernameCheckAPIView(APIView):
     """
@@ -208,15 +213,37 @@ class RoomViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
         return Response({}, status=status.HTTP_204_NO_CONTENT)
-    
-    # 방 비밀번호 맞는지 틀리는지 반환    
-#    def retrieve(self, request, *args, **kwargs):
-#        instance = self.get_object()
-#        serializer = RoomPasswordSerializer(instance=instance.password)
-#        
-#        # 방 비밀번호와 입력받은 비밀번호가 같은지 검사
-#        if serializer.is_valid() and :
-#            return Response(serializer.data)
-##        
-#        else:
 
+
+    def create(self, request, *args, **kwargs):
+        serializer = RoomSerializer(data=request.data, context={'request': request})
+    
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data)
+        else:
+            return Response(
+                {
+                    "message": "잘못된 생성입니다."
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+
+        # 방 비밀번호 맞는지 틀리는지 반환    
+    def retrieve(self, request, pk=None):
+        password = request.GET.get('password')
+        
+        instance = Room.objects.get(pk=pk)
+
+        # 방 비밀번호와 입력받은 비밀번호가 같은지 검사
+        if instance.password == password:
+            serialized_data = serialize('json', [instance])
+            return HttpResponse(serialized_data, content_type="text/json-comment-filtered", status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(
+                {
+                    "message": "비밀번호가 다릅니다.",
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )

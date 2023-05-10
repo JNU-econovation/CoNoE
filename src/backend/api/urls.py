@@ -9,6 +9,7 @@ from .views import RegisterAndObtainTokenView, RoomViewSet, TokenObtainPairView,
 # Rooms url
 router = routers.DefaultRouter()
 router.register(r"rooms", RoomViewSet)
+
 urlpatterns = router.urls
 
 # Authentications Urls
@@ -19,6 +20,8 @@ urlpatterns += [
     
     # post - 로그인, delete - 로그아웃, get - 유저 정보
     path("user/login/", AuthAPIView.as_view(), name="login_user"),
+    
+    path("rooms/<int:pk>/", RoomViewSet.as_view(actions = {'get': 'retrieve'})),
     
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
