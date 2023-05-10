@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "../components/common/Layout.jsx";
+import Layout from "../components/common/layout/Layout.jsx";
 import Main from "../components/home/Main.jsx";
 import SignIn from "../components/home/SignIn.jsx";
 
