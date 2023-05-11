@@ -277,12 +277,9 @@ class UserMadeRoomAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        desired_value = self.request.user.username
-        
-        queryset = Room.objects.annotate(
-            user_in_room=Concat(Value(','), 'room_users', Value(',')),
-        ).filter(user_in_room__contains=desired_value)
-
+    
+        # By default list of rooms return
+        queryset = Room.objects.filter(username__exact=self.request.user.username).order_by("-created_on")
         return queryset
     
     def list(self, request):
