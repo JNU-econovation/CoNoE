@@ -111,3 +111,22 @@ class RoomSerializer(serializers.ModelSerializer):
             "description",
             "created_on",
             ]
+        
+        
+class MadeRoomSerializer(serializers.ModelSerializer):
+    
+    """
+    User made Room Serializer
+    """
+
+    class Meta:
+        model = Room
+        fields = [
+            "roomname",
+            "user",
+            "username",
+            "title",
+            "password",
+            "description",
+            "created_on",
+            ]

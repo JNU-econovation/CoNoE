@@ -20,7 +20,8 @@ from .serializers import (
     RegisterTokenSerializer,
     UsernameUniqueCheckSerializer,
     LoginSerializer,
-    PasswordSerializer
+    PasswordSerializer,
+    MadeRoomSerializer
 )
 
 
@@ -256,3 +257,23 @@ class RoomViewSet(viewsets.ModelViewSet):
                 },
                 status=status.HTTP_404_NOT_FOUND
             )
+
+class UserMadeRoomAPIView(generics.ListCreateAPIView):
+    """
+    Return Rooms made by request.user
+    """
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+    
+        # By default list of rooms return
+        queryset = Room.objects.filter(username__exact=self.request.user.username).order_by("-created_on")
+        return queryset
+    
+    def list(self, request):
+        # Note the use of `get_queryset()` instead of `self.queryset`
+        queryset = self.get_queryset()
+        serializer = MadeRoomSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
