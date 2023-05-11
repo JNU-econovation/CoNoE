@@ -15,6 +15,7 @@ from rest_framework.validators import UniqueValidator
 
 from .models import Room, User
 
+
 # Get Token을 위한 Serializer
 class TokenObtainPairSerializer(OriginalObtainPairSerializer):
     """
@@ -25,6 +26,7 @@ class TokenObtainPairSerializer(OriginalObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         return token
+
 
 # 회원가입을 할 때 토큰을 생성하는 Serializer
 class RegisterTokenSerializer(serializers.ModelSerializer):
@@ -65,6 +67,7 @@ class LoginSerializer(serializers.Serializer):
             {"error": "Unable to log in"}
         )
 
+
 # username 필드가 유일하다는 것을 확인하는 Serailizer
 class UsernameUniqueCheckSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True, min_length=3, max_length=30, validators=[UniqueValidator(queryset=User.objects.all())])
@@ -72,6 +75,7 @@ class UsernameUniqueCheckSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username',)
+
  
 # 비밀번호를 정의하는 Serializer
 class PasswordSerializer(serializers.Serializer):
@@ -130,3 +134,31 @@ class MadeRoomSerializer(serializers.ModelSerializer):
             "description",
             "created_on",
             ]
+
+
+class JoinRoomSerializer(serializers.ModelSerializer):
+    
+    is_admin = serializers.SerializerMethodField()
+    
+    """
+    User join Room Serializer
+    """
+
+    class Meta:
+        model = Room
+        fields = [
+            "roomname",
+            "username",
+            "is_admin",
+            ]
+        
+    def get_is_admin(self, obj):
+        
+        # context는 시리얼라이저가 초기화될 때 전달되는 딕셔너리입니다. 따라서 context를 통해 현재 로그인한 사용자 정보를 전달할 수 있습니다.
+        request = self.context.get('request')
+        
+        if obj.username == request.user.username:
+            return True
+    
+        return False
+        

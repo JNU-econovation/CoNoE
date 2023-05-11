@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
-from .views import RegisterAndObtainTokenView, RoomViewSet, TokenObtainPairView, AuthAPIView, UsernameCheckAPIView, UserMadeRoomAPIView
+from .views import RegisterAndObtainTokenView, RoomViewSet, TokenObtainPairView, AuthAPIView, UsernameCheckAPIView, UserMadeRoomAPIView, UserJoinRoomAPIView
 
 
 
@@ -24,6 +24,8 @@ urlpatterns += [
     path("rooms/<str:roomname>/", RoomViewSet.as_view(actions = {'get': 'retrieve'})),
     
     path("search/room/", UserMadeRoomAPIView.as_view(), name="user_made_room"),
+    
+    path("search/joined/room", UserJoinRoomAPIView.as_view(), name="user_join_room"),
     
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),

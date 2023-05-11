@@ -2,6 +2,8 @@ import jwt
 
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.db.models.functions import Concat
+from django.db.models import Q, Value, CharField
 from rest_framework import status, viewsets, generics
 from django.contrib.auth import authenticate
 from django.core.serializers import serialize
@@ -21,7 +23,8 @@ from .serializers import (
     UsernameUniqueCheckSerializer,
     LoginSerializer,
     PasswordSerializer,
-    MadeRoomSerializer
+    MadeRoomSerializer,
+    JoinRoomSerializer
 )
 
 
@@ -241,6 +244,13 @@ class RoomViewSet(viewsets.ModelViewSet):
             instance = Room.objects.get(roomname=roomname)
 
             if instance.password == password and instance.roomname == roomname:
+                """
+                todo : 현재 유저 request.user -> instance의 room_users.append(request.user.username) 하기
+                """
+                room_users = instance.room_users
+                if request.user.username not in room_users:
+                    room_users.append(request.user.username)
+                    instance.save()
                 serialized_data = serialize('json', [instance])
                 return HttpResponse(serialized_data, content_type="text/json-comment-filtered", status=status.HTTP_202_ACCEPTED)
             else:
@@ -267,13 +277,42 @@ class UserMadeRoomAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-    
-        # By default list of rooms return
-        queryset = Room.objects.filter(username__exact=self.request.user.username).order_by("-created_on")
+        desired_value = self.request.user.username
+        
+        queryset = Room.objects.annotate(
+            user_in_room=Concat(Value(','), 'room_users', Value(',')),
+        ).filter(user_in_room__contains=desired_value)
+
         return queryset
     
     def list(self, request):
         # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = self.get_queryset()
         serializer = MadeRoomSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+    
+    
+class UserJoinRoomAPIView(generics.ListCreateAPIView):
+    """
+    Return Rooms made by request.user
+    """
+    queryset = Room.objects.all()
+    serializer_class = JoinRoomSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        desired_value = self.request.user.username
+        
+        queryset = Room.objects.annotate(
+            user_in_room=Concat(Value(','), 'room_users', Value(','), output_field=CharField()),
+        ).filter(user_in_room__contains=desired_value)
+
+        return queryset
+           
+    def list(self, request):
+        # Note the use of `get_queryset()` instead of `self.queryset`
+        queryset = self.get_queryset()
+        serializer = JoinRoomSerializer(queryset, many=True, context={
+            'request': request
+        })
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)

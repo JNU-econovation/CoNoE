@@ -1,7 +1,9 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.db.models import CharField
 from django.utils.translation import gettext_lazy as _
+from django_mysql.models import ListCharField
 
 
 class UserManager(BaseUserManager):
@@ -60,6 +62,11 @@ class Room(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=20, blank=False)
     title = models.CharField(max_length=200, blank=False)
+    room_users = ListCharField(
+        base_field=CharField(max_length=10),
+        size = 6,
+        max_length=(6*11)
+    )
     roomname = models.CharField(max_length=20, blank=False, unique=True, primary_key=True)
     password = models.CharField(max_length=15, blank=False)
     description = models.TextField(default="")
@@ -74,7 +81,4 @@ class Room(models.Model):
         super().save(*args, **kwargs)
      
         
-class UsersInRoom(models.Model):
-    """
-    UsersInRoom Model -> 현재 Room 안에 있는 사람들을 저장
-    """
+    
