@@ -72,3 +72,9 @@ class Room(models.Model):
         self.username = self.user.username
         
         super().save(*args, **kwargs)
+     
+        
+class UsersInRoom(models.Model):
+    """
+    UsersInRoom Model -> 현재 Room 안에 있는 사람들을 저장
+    """
