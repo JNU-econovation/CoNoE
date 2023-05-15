@@ -14,8 +14,9 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.views import TokenObtainPairView as OriginalObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from group_call.settings import SECRET_KEY
+from datetime import date
 
-from .models import Room , User
+from .models import Room , User, CheckRoom
 from .serializers import (
     RoomSerializer,
     TokenObtainPairSerializer,
@@ -24,7 +25,8 @@ from .serializers import (
     LoginSerializer,
     PasswordSerializer,
     MadeRoomSerializer,
-    JoinRoomSerializer
+    JoinRoomSerializer,
+    CheckSerializer,
 )
 
 
@@ -224,9 +226,10 @@ class RoomViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = RoomSerializer(data=request.data, context={'request': request})
-    
+
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            room = serializer.save(user=request.user)
+            room.save()
             return Response(serializer.data)
         else:
             return Response(
@@ -313,3 +316,39 @@ class UserJoinRoomAPIView(generics.ListCreateAPIView):
             'request': request
         })
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+    
+
+class CheckAPIView(APIView):
+    """
+    출석 체크시에 유저를 True로 등록합니다.
+    """
+
+    def post(self, request):
+        user = request.user
+
+        today = date.today()
+
+        roomname = request.query_params.get('roomname')
+        room = Room.objects.get(roomname=roomname)
+
+        # 오늘 생성된 출석 체크가 있는지
+        check_room = CheckRoom.objects.filter(created_on=today, room=room).first()
+        
+        # 이미 오늘 생성된 인스턴스인 경우 업데이트 로직을 수행합니다.
+        if check_room is not None:
+            # 현재 user만 출석 체크하기
+            user_dict = check_room.user_check
+            user_dict[user.username] = True
+            check_room.save()
+
+            serializer = CheckSerializer(check_room)
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+
+        # 오늘 생성되지 않은 경우 새로운 인스턴스를 생성합니다.
+        else:
+            new_check_room = CheckRoom(room=room, user_check={user.username:True})
+            new_check_room.save()
+        
+            serializer = CheckSerializer(new_check_room)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    

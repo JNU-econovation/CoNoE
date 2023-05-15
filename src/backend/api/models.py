@@ -4,7 +4,8 @@ from django.db import models
 from django.db.models import CharField
 from django.utils.translation import gettext_lazy as _
 from django_mysql.models import ListCharField
-
+from jsonfield import JSONField
+from datetime import date
 
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
@@ -81,4 +82,7 @@ class Room(models.Model):
         super().save(*args, **kwargs)
      
         
-    
+class CheckRoom(models.Model):
+    user_check = JSONField(default=dict)
+    created_on = models.DateField(default=date.today)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)

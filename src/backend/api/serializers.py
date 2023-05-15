@@ -13,7 +13,7 @@ from rest_framework_simplejwt.serializers import (
 
 from rest_framework.validators import UniqueValidator
 
-from .models import Room, User
+from .models import Room, User, CheckRoom
 
 
 # Get Token을 위한 Serializer
@@ -162,3 +162,7 @@ class JoinRoomSerializer(serializers.ModelSerializer):
     
         return False
         
+class CheckSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = CheckRoom
+       fields = '__all__'
