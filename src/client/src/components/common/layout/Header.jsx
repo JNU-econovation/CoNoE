@@ -47,6 +47,7 @@ const Welcome = styled.div`
 
   strong:hover {
     text-decoration: underline;
+    text-underline-position: under;
   }
 `;
 

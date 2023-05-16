@@ -10,7 +10,7 @@ const Container = styled.button`
   border-radius: 0.25rem;
 
   color: ${({ theme }) => theme.color.white};
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1rem;
   text-align: center;
 
