@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
+import styled from "styled-components";
+
 import Layout from "../components/common/layout/Layout.jsx";
 import StyledH3 from "../styles/StyledH3.js";
-import styled from "styled-components";
 import BlueButton from "../components/common/BlueButton";
 import RoomInfoRow from "../components/my-room/RoomInfoRow.jsx";
+import EnterRoomModal from "../components/my-room/EnterRoomModal.jsx";
+import BackdropModal from "../components/common/modal/BackdropModal.jsx";
 
 const Container = styled.article`
   width: 700px;
@@ -44,6 +47,10 @@ function MyRoom() {
     },
   ];
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+
   return (
     <Layout isLoggedIn={true} title="나의 방">
       <Container>
@@ -54,10 +61,14 @@ function MyRoom() {
           <BlueButton
             text="입장하기"
             type="button"
-            onClick={() => console.log("입장하기")}
+            onClick={handleOpenModal}
             width="100px"
           />
         </TitleBar>
+
+        <BackdropModal open={isModalOpen} setOpen={setIsModalOpen}>
+          <EnterRoomModal setOpen={setIsModalOpen} />
+        </BackdropModal>
 
         {roomInfoArray.map((info) => (
           <RoomInfoRow

@@ -94,8 +94,33 @@ const CREATE_ROOM = [
   },
 ];
 
+const ENTER_ROOM = [
+  {
+    id: "roomId",
+    label: "방 아이디",
+    type: "text",
+    validation: {
+      required: "방 아이디를 입력해 주세요",
+    },
+  },
+  {
+    id: "roomPassword",
+    label: "비밀번호",
+    type: "password",
+    validation: {
+      required: "비밀번호를 입력해 주세요",
+      minLength: { value: 8, message: "비밀번호는 8글자 이상입니다" },
+      pattern: {
+        value: /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/,
+        message: "비밀번호는 숫자와 영어를 1글자 이상 포함합니다",
+      },
+    },
+  },
+];
+
 Object.freeze(SIGN_US);
 Object.freeze(SIGN_IN);
 Object.freeze(CREATE_ROOM);
+Object.freeze(ENTER_ROOM);
 
-export default { SIGN_US, SIGN_IN, CREATE_ROOM };
+export default { SIGN_US, SIGN_IN, CREATE_ROOM, ENTER_ROOM };

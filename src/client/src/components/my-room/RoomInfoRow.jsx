@@ -49,8 +49,7 @@ function RoomInfoRow({ id, name, manager }) {
         <RoomName>{name}</RoomName>
         <Manager>{manager}</Manager>
       </InfoBox>
-
-      <Button>참여하기</Button>
+      <Button onClick={() => console.log(id)}>참여하기</Button>
     </Container>
   );
 }
