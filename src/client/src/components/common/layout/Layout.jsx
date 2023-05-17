@@ -23,6 +23,8 @@ const Main = styled.main`
   width: 100vw;
   min-height: calc(100vh - 200px);
 
+  position: relative;
+
   display: flex;
   flex-direction: column;
   justify-content: center;

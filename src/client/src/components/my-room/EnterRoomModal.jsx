@@ -1,0 +1,37 @@
+import React from "react";
+import styled from "styled-components";
+import StyledH3 from "../../styles/StyledH3.js";
+import Form from "../common/form/Form.jsx";
+import FORM_INFO from "../../constant/FORM_INFO.js";
+import FORM_DEFAULT from "../../constant/FORM_DEFAULT.js";
+import PropTypes from "prop-types";
+
+const Container = styled.article`
+  width: 450px;
+  height: 450px;
+  padding: 3.5rem 3rem;
+`;
+
+function EnterRoomModal({ setOpen }) {
+  return (
+    <Container>
+      <StyledH3>입장하기</StyledH3>
+      <Form
+        onSubmit={(data) => {
+          console.log(data);
+          setOpen(false);
+        }}
+        onError={(err) => console.error(err)}
+        inputInformations={FORM_INFO.ENTER_ROOM}
+        defaultValues={FORM_DEFAULT.ENTER_ROOM}
+        buttonLabel="입장하기"
+      />
+    </Container>
+  );
+}
+
+EnterRoomModal.propTypes = {
+  setOpen: PropTypes.func.isRequired,
+};
+
+export default EnterRoomModal;
