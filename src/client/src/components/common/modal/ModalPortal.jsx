@@ -7,4 +7,3 @@ function ModalPortal({ children }) {
 }
 
 export default ModalPortal;
-가;
