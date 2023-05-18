@@ -21,7 +21,7 @@ urlpatterns += [
     # post - 로그인, delete - 로그아웃, get - 유저 정보
     path("user/login/", AuthAPIView.as_view(), name="login_user"),
     
-    path("rooms/<str:roomname>/", RoomViewSet.as_view(actions = {'get': 'retrieve'})),
+    path("rooms/<int:pk>/", RoomViewSet.as_view(actions = {'get': 'retrieve'})),
     
     path("search/room/", UserMadeRoomAPIView.as_view(), name="user_made_room"),
     

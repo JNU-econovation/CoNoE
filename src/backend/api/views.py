@@ -92,7 +92,7 @@ class UsernameCheckAPIView(APIView):
 class AuthAPIView(APIView):
     
     permission_classes = [AllowAny]
-    lookup_field = 'roomname'
+    lookup_field = 'pk'
     
     # 유저 정보 확인
     def get(self, request):
@@ -174,8 +174,8 @@ class RoomViewSet(viewsets.ModelViewSet):
     """
     queryset = Room.objects.all().order_by("-created_on")
     serializer_class = RoomSerializer
-    lookup_field = 'roomname'
-    lookup_url_kwarg = 'roomname'
+    lookup_field = 'pk'
+    lookup_url_kwarg = 'pk'
 
     def get_queryset(self):
 
@@ -222,7 +222,7 @@ class RoomViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
         return Response({}, status=status.HTTP_204_NO_CONTENT)
-
+        
 
     def create(self, request, *args, **kwargs):
         serializer = RoomSerializer(data=request.data, context={'request': request})
@@ -239,13 +239,13 @@ class RoomViewSet(viewsets.ModelViewSet):
             )
 
 
-    def retrieve(self, request, roomname=None):
+    def retrieve(self, request, pk=None):
         password = request.GET.get('password')
 
         try:
-            instance = Room.objects.get(roomname=roomname)
+            instance = Room.objects.get(pk=pk)
 
-            if instance.password == password and instance.roomname == roomname:
+            if instance.password == password and instance.pk == int(pk):
                 """
                 todo : 현재 유저 request.user -> instance의 room_users.append(request.user.username) 하기
                 """
@@ -257,9 +257,9 @@ class RoomViewSet(viewsets.ModelViewSet):
                 return HttpResponse(serialized_data, content_type="text/json-comment-filtered", status=status.HTTP_202_ACCEPTED)
             else:
                 return Response(
-                    {
-                        "message": "비밀번호가 다릅니다.",
-                    },
+                {
+                    "message": "해당 아이디의 방을 찾을 수 없습니다.",
+                },
                     status=status.HTTP_401_UNAUTHORIZED
                 )
         except Room.DoesNotExist:
@@ -302,10 +302,12 @@ class UserJoinRoomAPIView(generics.ListCreateAPIView):
     def get_queryset(self):
         desired_value = self.request.user.username
         
-        queryset = Room.objects.annotate(
-            user_in_room=Concat(Value(','), 'room_users', Value(','), output_field=CharField()),
-        ).filter(user_in_room__contains=desired_value)
-
+        #  room_users에 desired_value가 포함되어있는 쿼리셋 반환
+        queryset = Room.objects.extra(
+        where=["room_users LIKE %s"],
+        params=['%' + desired_value + '%']
+        ).all()
+        
         return queryset
            
     def list(self, request):
@@ -327,8 +329,8 @@ class CheckAPIView(APIView):
 
         today = date.today()
 
-        roomname = request.query_params.get('roomname')
-        room = Room.objects.get(roomname=roomname)
+        pk = request.query_params.get('pk')
+        room = Room.objects.get(pk=pk)
 
         # 오늘 생성된 출석 체크가 있는지
         is_exists = CheckRoom.objects.filter(created_on=today, room=room).exists()
@@ -357,8 +359,8 @@ class CheckAPIView(APIView):
     
     # 해당 방의 출석 체크 정보를 가져온다.
     def get(self, request):
-        roomname = request.query_params.get('roomname')
-        room = Room.objects.get(roomname=roomname)
+        pk = request.query_params.get('pk')
+        room = Room.objects.get(pk=pk)
         
         # 출석 체크들을 반환
         check_room = CheckRoom.objects.filter(room=room).all()
