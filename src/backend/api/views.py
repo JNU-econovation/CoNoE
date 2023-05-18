@@ -228,8 +228,7 @@ class RoomViewSet(viewsets.ModelViewSet):
         serializer = RoomSerializer(data=request.data, context={'request': request})
 
         if serializer.is_valid():
-            room = serializer.save(user=request.user)
-            room.save()
+            serializer.save(user=request.user)
             return Response(serializer.data)
         else:
             return Response(
@@ -332,23 +331,39 @@ class CheckAPIView(APIView):
         room = Room.objects.get(roomname=roomname)
 
         # 오늘 생성된 출석 체크가 있는지
-        check_room = CheckRoom.objects.filter(created_on=today, room=room).first()
+        is_exists = CheckRoom.objects.filter(created_on=today, room=room).exists()
         
         # 이미 오늘 생성된 인스턴스인 경우 업데이트 로직을 수행합니다.
-        if check_room is not None:
+        if is_exists:
+            check_room = CheckRoom.objects.filter(created_on=today, room=room).first()
+            
             # 현재 user만 출석 체크하기
             user_dict = check_room.user_check
             user_dict[user.username] = True
             check_room.save()
-
             serializer = CheckSerializer(check_room)
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)                
+                
         # 오늘 생성되지 않은 경우 새로운 인스턴스를 생성합니다.
         else:
             new_check_room = CheckRoom(room=room, user_check={user.username:True})
             new_check_room.save()
-        
+                        
+
             serializer = CheckSerializer(new_check_room)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+            
     
+    # 해당 방의 출석 체크 정보를 가져온다.
+    def get(self, request):
+        roomname = request.query_params.get('roomname')
+        room = Room.objects.get(roomname=roomname)
+        
+        # 출석 체크들을 반환
+        check_room = CheckRoom.objects.filter(room=room).all()
+        
+        # 만약 출석체크가 없다면 반환합니다.
+        if check_room.exists():
+            serializer = CheckSerializer(check_room, many=True)
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
