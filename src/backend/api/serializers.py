@@ -107,7 +107,7 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            "roomname",
+            "pk",
             "user",
             "username",
             "title",
@@ -126,7 +126,7 @@ class MadeRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            "roomname",
+            "pk",
             "user",
             "username",
             "title",
@@ -147,7 +147,8 @@ class JoinRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            "roomname",
+            "pk",
+            "title",
             "username",
             "is_admin",
             ]

@@ -68,7 +68,6 @@ class Room(models.Model):
         size = 6,
         max_length=(6*11)
     )
-    roomname = models.CharField(max_length=20, blank=False, unique=True, primary_key=True)
     password = models.CharField(max_length=15, blank=False)
     description = models.TextField(default="")
     created_on = models.DateTimeField(auto_now_add=True)
