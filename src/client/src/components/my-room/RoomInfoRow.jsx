@@ -36,6 +36,11 @@ const ManageBtn = styled.button`
   border: none;
   font-size: 0.9rem;
   color: ${({ theme }) => theme.color.alert};
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-position: under;
+  }
 `;
 
 const Button = styled.button`
