@@ -22,7 +22,10 @@ function PrivateRouter() {
       <Route path={routes.myRoom} element={<MyRoom />} />
       <Route path={routes.attendance} element={<div>Attendance</div>} />
       <Route path={routes.createRoom} element={<CreateRoom />} />
-      <Route path={routes.manageRoom} element={<div>Manage Room</div>} />
+      <Route
+        path={`${routes.manageRoom}/:roomId`}
+        element={<div>Manage Room</div>}
+      />
       <Route path="*" element={<div>error</div>} />
     </>
   );
