@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
+import routes from "../../routes.js";
 
 const Container = styled.div`
   padding: 1rem 0;
@@ -28,6 +30,19 @@ const Manager = styled.p`
   font-weight: 600;
 `;
 
+const ManageBtn = styled.button`
+  margin-left: 0.4rem;
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.color.alert};
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-position: under;
+  }
+`;
+
 const Button = styled.button`
   margin-right: 0.5rem;
   color: ${({ theme }) => theme.color.main};
@@ -43,11 +58,19 @@ const Button = styled.button`
 `;
 
 function RoomInfoRow({ id, name, manager }) {
+  const navigate = useNavigate();
+
+  const onManageBtnClick = () => {
+    navigate(`${routes.manageRoom}/${id}`);
+  };
   return (
     <Container>
       <InfoBox>
         <RoomName>{name}</RoomName>
         <Manager>{manager}</Manager>
+        {manager === "본인" && (
+          <ManageBtn onClick={onManageBtnClick}>관리하기</ManageBtn>
+        )}
       </InfoBox>
       <Button onClick={() => console.log(id)}>참여하기</Button>
     </Container>

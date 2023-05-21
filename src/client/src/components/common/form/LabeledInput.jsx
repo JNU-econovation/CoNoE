@@ -39,6 +39,10 @@ const Input = styled.input`
   &.error {
     border: ${({ theme }) => theme.border.alert};
   }
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.color.white};
+  }
 `;
 
 const Message = styled.div`
