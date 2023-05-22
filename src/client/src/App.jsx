@@ -13,6 +13,7 @@ import CreateRoom from "./pages/CreateRoom.jsx";
 import SignIn from "./pages/SignIn";
 import MyRoom from "./pages/MyRoom.jsx";
 import ManageRoom from "./pages/ManageRoom.jsx";
+import Attendance from "./pages/Attendance.jsx";
 
 function PrivateRouter() {
   return (
@@ -21,10 +22,7 @@ function PrivateRouter() {
       <Route path={routes.myPage} element={<div>my page</div>} />
       <Route path={routes.room} element={<div>Room</div>} />
       <Route path={routes.myRoom} element={<MyRoom />} />
-      <Route
-        path={`${routes.attendance}/:roomId`}
-        element={<div>Attendance</div>}
-      />
+      <Route path={`${routes.attendance}/:roomId`} element={<Attendance />} />
       <Route path={routes.createRoom} element={<CreateRoom />} />
       <Route path={`${routes.manageRoom}/:roomId`} element={<ManageRoom />} />
       <Route path="*" element={<div>error</div>} />
