@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
-import NavBar from "../components/video-call/navigation-bar/NavBar.jsx";
 import { io } from "socket.io-client";
+
+import NavBar from "../components/video-call/navigation-bar/NavBar.jsx";
+import getMedia from "../utils/getMedia.js";
 
 const Container = styled.main`
   width: 100%;
@@ -26,32 +28,16 @@ function VideoCall() {
   const { roomId } = useParams();
   const myVideoRef = useRef();
   const [cameraArray, setCameraArray] = useState([]);
-  // const socket = io(`${import.meta.env.VITE_BACKEND_API}video/${roomId}`);
-
-  const getMedia = async () => {
-    try {
-      myStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      myVideoRef.current.srcObject = myStream;
-      await getCameras();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const getCameras = async () => {
-    try {
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      setCameraArray(devices.filter((device) => device.kind === "videoinput"));
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const [micArray, setMicArray] = useState([]);
+  // const socket = io(`${import.meta.env.VITE_SIGNAL_SERVER}video/${roomId}`);
 
   const initCall = async () => {
-    await getMedia();
+    myStream = await getMedia({
+      myStream,
+      myVideoRef,
+      setCameraArray,
+      setMicArray,
+    });
   };
 
   const joinRoom = async () => {
@@ -74,7 +60,11 @@ function VideoCall() {
         />
       </UserVideoBox>
 
-      <NavBar myStream={myStream} />
+      <NavBar
+        myStream={myStream}
+        cameraArray={cameraArray}
+        micArray={micArray}
+      />
     </Container>
   );
 }

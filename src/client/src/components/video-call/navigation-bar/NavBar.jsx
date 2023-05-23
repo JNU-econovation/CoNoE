@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import Clock from "./Clock.jsx";
+import VideoCallControlBtnContainer from "./VideoCallControlBtnContainer.jsx";
+import SideBarBtnContainer from "./SideBarBtnContainer.jsx";
 
 const NavBarContainer = styled.div`
   position: fixed;
@@ -16,42 +18,18 @@ const NavBarContainer = styled.div`
   color: ${({ theme }) => theme.color.white};
 `;
 
-const MainBtnContainer = styled.div``;
-
-const SideBarBtnContainer = styled.div``;
-
-function NavBar({ myStream }) {
-  const [isMicOn, setIsMicOn] = useState(false);
-  const [isCameraOn, setIsCameraOn] = useState(true);
-
-  const handleMicBtnClick = () => {
-    myStream
-      .getAudioTracks()
-      .forEach((track) => (track.enabled = !track.enabled));
-    setIsMicOn((isMicOn) => !isMicOn);
-    console.log(myStream.getAudioTracks());
-  };
-
-  const handleCameraBtnClick = () => {
-    myStream
-      .getVideoTracks()
-      .forEach((track) => (track.enabled = !track.enabled));
-    setIsCameraOn((isCameraOn) => !isCameraOn);
-  };
-
-  const currentDate = new Date();
-
+function NavBar({ myStream, cameraArray, micArray }) {
   return (
     <NavBarContainer>
       <Clock />
 
-      <MainBtnContainer>
-        <button onClick={handleMicBtnClick}>마이크</button>
-        <button onClick={handleCameraBtnClick}>카메라</button>
-        <button>설정</button>
-      </MainBtnContainer>
+      <VideoCallControlBtnContainer myStream={myStream} />
 
-      <SideBarBtnContainer>2klkd</SideBarBtnContainer>
+      <SideBarBtnContainer
+        myStream={myStream}
+        cameraArray={cameraArray}
+        micArray={micArray}
+      />
     </NavBarContainer>
   );
 }
