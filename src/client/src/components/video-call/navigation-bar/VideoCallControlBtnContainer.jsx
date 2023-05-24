@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 
-function VideoCallControlBtnContainer({ myStream }) {
+function VideoCallControlBtnContainer({ localStreamRef }) {
   const [isMicOn, setIsMicOn] = useState(false);
   const [isCameraOn, setIsCameraOn] = useState(true);
 
   const handleMicBtnClick = () => {
-    myStream
+    localStreamRef.current
       .getAudioTracks()
       .forEach((track) => (track.enabled = !track.enabled));
     setIsMicOn((isMicOn) => !isMicOn);
   };
 
   const handleCameraBtnClick = () => {
-    myStream
+    localStreamRef.current
       .getVideoTracks()
       .forEach((track) => (track.enabled = !track.enabled));
     setIsCameraOn((isCameraOn) => !isCameraOn);

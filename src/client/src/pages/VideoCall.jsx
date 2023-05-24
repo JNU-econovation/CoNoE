@@ -21,21 +21,21 @@ const UserVideoBox = styled.section`
   }
 `;
 
-let myStream;
-
 function VideoCall() {
   const { roomId } = useParams();
   const socket = io(import.meta.env.VITE_SIGNAL_SERVER);
   const webRtc = new WebRTC(socket, roomId);
 
+  const localStreamRef = useRef();
   const myVideoRef = useRef();
   const otherVideoRef = useRef();
+
   const [cameraArray, setCameraArray] = useState([]);
   const [micArray, setMicArray] = useState([]);
 
   const initCall = async () => {
-    myStream = await getMedia({
-      myStream,
+    localStreamRef.current = await getMedia({
+      localStreamRef,
       myVideoRef,
       setCameraArray,
       setMicArray,
@@ -44,7 +44,7 @@ function VideoCall() {
 
   const makeConnection = async () => {
     webRtc.setIceCandidate();
-    await webRtc.addTracks(myStream);
+    await webRtc.addTracks(localStreamRef.current);
     webRtc.setRemoteVideo(otherVideoRef);
   };
 
@@ -94,7 +94,7 @@ function VideoCall() {
       </UserVideoBox>
 
       <NavBar
-        myStream={myStream}
+        localStreamRef={localStreamRef}
         cameraArray={cameraArray}
         micArray={micArray}
       />

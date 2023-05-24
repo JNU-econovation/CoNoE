@@ -18,15 +18,15 @@ const NavBarContainer = styled.div`
   color: ${({ theme }) => theme.color.white};
 `;
 
-function NavBar({ myStream, cameraArray, micArray }) {
+function NavBar({ localStreamRef, cameraArray, micArray }) {
   return (
     <NavBarContainer>
       <Clock />
 
-      <VideoCallControlBtnContainer myStream={myStream} />
+      <VideoCallControlBtnContainer localStreamRef={localStreamRef} />
 
       <SideBarBtnContainer
-        myStream={myStream}
+        localStreamRef={localStreamRef}
         cameraArray={cameraArray}
         micArray={micArray}
       />

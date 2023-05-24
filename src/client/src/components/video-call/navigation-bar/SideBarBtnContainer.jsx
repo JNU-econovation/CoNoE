@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import BackdropModal from "../../common/modal/BackdropModal.jsx";
 import SettingModal from "./SettingModal.jsx";
 
-function SideBarBtnContainer({ myStream, cameraArray, micArray }) {
+function SideBarBtnContainer({ localStreamRef, cameraArray, micArray }) {
   const [isSettingModalOpen, setIsSettingModalOpen] = useState(false);
 
   const handleSettingBtnClick = () => {
@@ -16,7 +16,7 @@ function SideBarBtnContainer({ myStream, cameraArray, micArray }) {
 
       <BackdropModal open={isSettingModalOpen} setOpen={setIsSettingModalOpen}>
         <SettingModal
-          myStream={myStream}
+          localStreamRef={localStreamRef}
           cameraArray={cameraArray}
           micArray={micArray}
         />

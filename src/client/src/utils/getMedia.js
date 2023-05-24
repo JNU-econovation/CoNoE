@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
-const setMyVideoRef = (ref, myStream) => {
-  ref.current.srcObject = myStream;
+const setMyVideoRef = (ref, localStreamRef) => {
+  ref.current.srcObject = localStreamRef.current;
 };
 
 const getDevices = async ({ setCameraArray, setMicArray }) => {
@@ -17,7 +17,7 @@ const getDevices = async ({ setCameraArray, setMicArray }) => {
 const getMedia = async ({
   micId,
   cameraId,
-  myStream,
+  localStreamRef,
   myVideoRef,
   setCameraArray,
   setMicArray,
@@ -30,17 +30,19 @@ const getMedia = async ({
   console.log(initialConstrains);
 
   try {
-    myStream = await navigator.mediaDevices.getUserMedia(initialConstrains);
+    localStreamRef.current = await navigator.mediaDevices.getUserMedia(
+      initialConstrains
+    );
 
     if (myVideoRef) {
-      setMyVideoRef(myVideoRef, myStream);
+      setMyVideoRef(myVideoRef, localStreamRef);
     }
 
     if (!micId && !cameraId) {
       await getDevices({ setCameraArray, setMicArray });
     }
 
-    return myStream;
+    return localStreamRef.current;
   } catch (err) {
     console.error(err);
   }
@@ -49,7 +51,7 @@ const getMedia = async ({
 getMedia.propTypes = {
   micId: PropTypes.string,
   cameraId: PropTypes.string,
-  myStream: PropTypes.object.isRequired,
+  localStreamRef: PropTypes.object.isRequired,
   myVideoRef: PropTypes.node,
   setCameraArray: PropTypes.func,
   setMicArray: PropTypes.func,

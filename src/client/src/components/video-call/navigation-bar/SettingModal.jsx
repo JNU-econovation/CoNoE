@@ -10,7 +10,7 @@ const Container = styled.section`
   color: ${({ theme }) => theme.color.body};
 `;
 
-function SettingModal({ myStream, cameraArray, micArray }) {
+function SettingModal({ localStreamRef, cameraArray, micArray }) {
   const cameraSelectRef = useRef();
   const micSelectRef = useRef();
 
@@ -18,7 +18,7 @@ function SettingModal({ myStream, cameraArray, micArray }) {
     await getMedia({
       micId: String(micSelectRef.current.value),
       cameraId: String(cameraSelectRef.value),
-      myStream,
+      localStreamRef,
     });
   };
 
@@ -26,7 +26,7 @@ function SettingModal({ myStream, cameraArray, micArray }) {
     await getMedia({
       micId: String(micSelectRef.current.value),
       cameraId: String(cameraSelectRef.current.value),
-      myStream,
+      localStreamRef,
     });
   };
 
