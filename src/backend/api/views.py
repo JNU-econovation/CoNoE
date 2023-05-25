@@ -86,7 +86,7 @@ class UsernameCheckAPIView(APIView):
             json = serializer.data
             return Response(json, status=status.HTTP_201_CREATED)
         else:
-            return Response("아이디가 중복되었습니다.", status=status.HTTP_201_CREATED)
+            return Response("아이디가 중복되었습니다.", status=status.HTTP_400_BAD_REQUEST)
         
 
 class AuthAPIView(APIView):
