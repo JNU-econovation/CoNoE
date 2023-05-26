@@ -27,7 +27,8 @@ from .serializers import (
     MadeRoomSerializer,
     JoinRoomSerializer,
     CheckSerializer,
-    RoomUserSerializer
+    RoomUserSerializer,
+    CheckUserSerializer
 )
 
 
@@ -337,12 +338,10 @@ class CheckAPIView(APIView):
     """
 
     def post(self, request):
-        user = request.user
-
         today = date.today()
 
-        pk = request.query_params.get('pk')
-        room = Room.objects.get(pk=pk)
+        roomId = request.query_params.get('roomId')
+        room = Room.objects.get(roomId=roomId)
 
         # 오늘 생성된 출석 체크가 있는지
         is_exists = Check.objects.filter(created_on=today, room=room).exists()
@@ -351,35 +350,46 @@ class CheckAPIView(APIView):
         if is_exists:
             check_room = Check.objects.filter(created_on=today, room=room).first()
             
-            # 현재 user만 출석 체크하기
-            check_user = CheckUser(check=check_room, username=request.user.username, is_check=True)
-            check_user.save()
+            # 현재 user만 출석 체크하기 -> 이미 출첵 한 유저면 ㄴㄴㄴ
+            if not CheckUser.objects.filter(check_room=check_room, username=request.user.username).exists():
+                check_user = CheckUser(check_room=check_room, username=request.user.username, is_check=True)
+                check_user.save()
             
-            serializer = CheckSerializer(check_room)
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)                
+            check_user = CheckUser.objects.filter(check_room=check_room, username=request.user.username)
+            serializer = CheckUserSerializer()
+            serialized_data = serializer.to_representation(check_user)
+            return Response(serialized_data, status=status.HTTP_202_ACCEPTED)                
                 
         # 오늘 생성되지 않은 경우 새로운 Check 인스턴스와 CheckUser 인스턴스를 생성합니다.
         else:
             new_check_room = Check(room=room)
-                        
-            # 현재 user만 출석 체크하기
-            check_user = CheckUser(check=new_check_room, username=request.user.username, is_check=True)
+            new_check_room.save()
+
+            # 현재 user만 출석 체크하기 
+            check_user = CheckUser(check_room=new_check_room, username=request.user.username, is_check=True)
             check_user.save()
 
-            serializer = CheckSerializer(new_check_room)
+            serializer = CheckUserSerializer()
+            serialized_data = serializer.to_representation(check_user)
 
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+            return Response(serialized_data, status=status.HTTP_202_ACCEPTED)
             
     
-    # 해당 방의 출석 체크 정보를 가져온다.
     def get(self, request):
-        pk = request.query_params.get('pk')
-        room = Room.objects.get(pk=pk)
+        roomId = request.query_params.get('roomId')
+        room = Room.objects.get(roomId=roomId)
         
         # 출석 체크들을 반환
-        check_room = Check.objects.filter(room=room).all()
+        checks = Check.objects.filter(room=room)
+
+        # 해당 출석 체크한 유저들을 반환
+        check_users = CheckUser.objects.filter(check_room__in=checks)
         
-        # 만약 출석체크가 없다면 반환합니다.
-        if check_room.exists():
-            serializer = CheckSerializer(check_room, many=True)
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        # check_users가 비어 있는 경우
+        if not check_users.exists():
+            return Response({"message": "No check users found."}, status=status.HTTP_204_NO_CONTENT)
+
+        serializer = CheckUserSerializer()
+        serialized_data = serializer.to_representation(check_users)
+
+        return Response(serialized_data, status=status.HTTP_200_OK)
