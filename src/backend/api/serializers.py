@@ -48,8 +48,8 @@ class RegisterTokenSerializer(serializers.ModelSerializer):
         fields = ("username", "email", "nickname", "password", "tokens")
 
     def create(self, validated_data):
-        instance = self.Meta.model.objects.create_user(**validated_data)
-        return instance
+        apiController = self.Meta.model.objects.create_user(**validated_data)
+        return apiController
 
 
 # 로그인 Serializer
@@ -62,7 +62,7 @@ class LoginSerializer(serializers.Serializer):
         user = authenticate(**data)
         if user:
             token = Token.objects.get(user=user)
-            return {"token":token, "User":User.objects.get(username=user.username)}         
+            return {"token":token, "User":User.objects.get(username=user.username)}
         raise serializers.ValidationError(
             {"error": "Unable to log in"}
         )
@@ -76,28 +76,28 @@ class UsernameUniqueCheckSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username',)
 
- 
+
 # 비밀번호를 정의하는 Serializer
 class PasswordSerializer(serializers.Serializer):
     password = serializers.CharField(required = True)
-    
+
     # Validates the password with django password validation
     def validate_password(self, pwd):
-        
+
         import re
 
         pattern = re.compile(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,}$')
 
         return bool(pattern.match(pwd))
 
-            
+
 class RoomSerializer(serializers.ModelSerializer):
 
     """
     Room Serializer
     """
-    
-    user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())    
+
+    user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
     username = serializers.CharField(read_only=True)
 
     created_on = serializers.DateTimeField(
@@ -115,10 +115,10 @@ class RoomSerializer(serializers.ModelSerializer):
             "description",
             "created_on",
             ]
-        
-        
+
+
 class MadeRoomSerializer(serializers.ModelSerializer):
-    
+
     """
     User made Room Serializer
     """
@@ -137,9 +137,9 @@ class MadeRoomSerializer(serializers.ModelSerializer):
 
 
 class JoinRoomSerializer(serializers.ModelSerializer):
-    
+
     is_admin = serializers.SerializerMethodField()
-    
+
     """
     User join Room Serializer
     """
@@ -152,17 +152,17 @@ class JoinRoomSerializer(serializers.ModelSerializer):
             "username",
             "is_admin",
             ]
-        
+
     def get_is_admin(self, obj):
-        
+
         # context는 시리얼라이저가 초기화될 때 전달되는 딕셔너리입니다. 따라서 context를 통해 현재 로그인한 사용자 정보를 전달할 수 있습니다.
         request = self.context.get('request')
-        
+
         if obj.username == request.user.username:
             return True
-    
+
         return False
-        
+
 class CheckSerializer(serializers.ModelSerializer):
    class Meta:
        model = CheckRoom
