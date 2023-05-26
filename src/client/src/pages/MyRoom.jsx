@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Layout from "../components/common/layout/Layout.jsx";
@@ -7,6 +7,8 @@ import BlueButton from "../components/common/BlueButton";
 import RoomInfoRow from "../components/my-room/RoomInfoRow.jsx";
 import EnterRoomModal from "../components/my-room/EnterRoomModal.jsx";
 import BackdropModal from "../components/common/modal/BackdropModal.jsx";
+
+import RoomAPI from "../api/RoomAPI.js";
 
 const Container = styled.article`
   width: 700px;
@@ -47,9 +49,14 @@ function MyRoom() {
     },
   ];
 
+  // const [roomInfoArray, setRoomInfoArray] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const handleOpenModal = () => setIsModalOpen(true);
+
+  useEffect(() => {
+    const response = RoomAPI.getUserEnteredRoom();
+    console.log(response);
+  }, []);
 
   return (
     <Layout isLoggedIn={true} title="나의 방">

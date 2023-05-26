@@ -104,7 +104,7 @@ const ENTER_ROOM = [
     },
   },
   {
-    id: "roomPassword",
+    id: "password",
     label: "비밀번호",
     type: "password",
     validation: {

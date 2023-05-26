@@ -1,7 +1,7 @@
 const SIGN_US = {
   userId: "",
   nickname: "",
-  "user-email": "",
+  userEmail: "",
   password: "",
 };
 
@@ -17,7 +17,7 @@ const CREATE_ROOM = {
 
 const ENTER_ROOM = {
   roomId: "",
-  roomPassword: "",
+  password: "",
 };
 
 const MANAGE_ROOM = {
