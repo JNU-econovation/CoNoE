@@ -149,6 +149,17 @@ REST_FRAMEWORK = {
 # Custom User Model
 AUTH_USER_MODEL = "api.User"
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'api.serializers.RegisterTokenSerializer',
+}
+
+APPEND_SLASH=False
+
+
 # Pointing to channels to routing configurations
 ASGI_APPLICATION = "group_call.asgi.application"
 
