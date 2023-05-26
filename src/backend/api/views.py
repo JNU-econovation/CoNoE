@@ -16,7 +16,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, Toke
 from group_call.settings import SECRET_KEY
 from datetime import date
 
-from .models import Room , User, CheckRoom
+from .models import Room , User, Check, RoomUsers, CheckUser
 from .serializers import (
     RoomSerializer,
     TokenObtainPairSerializer,
@@ -27,6 +27,7 @@ from .serializers import (
     MadeRoomSerializer,
     JoinRoomSerializer,
     CheckSerializer,
+    RoomUserSerializer
 )
 
 
@@ -60,7 +61,7 @@ class RegisterAndObtainTokenView(APIView):
         serializer = RegisterTokenSerializer(data=request.data)                        
         
         if not serializer.is_valid(): 
-            return Response("Error detected.", status=status.HTTP_500_INTERNAL_SERVER_ERROR) # 
+            return Response(serializer.errors , status=status.HTTP_500_INTERNAL_SERVER_ERROR) # 
         
         user = serializer.save() 
         if not user:
@@ -69,6 +70,7 @@ class RegisterAndObtainTokenView(APIView):
         json = serializer.data
         return Response(json, status=status.HTTP_201_CREATED)
         
+
 class UsernameCheckAPIView(APIView):
     """
     Register user. Only Post method is allowed
@@ -174,8 +176,8 @@ class RoomViewSet(viewsets.ModelViewSet):
     """
     queryset = Room.objects.all().order_by("-created_on")
     serializer_class = RoomSerializer
-    lookup_field = 'pk'
-    lookup_url_kwarg = 'pk'
+    lookup_field = 'roomId'
+    lookup_url_kwarg = 'roomId'
 
     def get_queryset(self):
 
@@ -202,12 +204,12 @@ class RoomViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
-    def destroy(self, request, pk=None):
+    def destroy(self, request, roomId=None):
 
         """
         Checks whether user requesting a delete of the room is the owner of the room or not
         """
-        room = get_object_or_404(Room, id=pk)
+        room = get_object_or_404(Room, roomId=roomId)
 
         if room:
             authenticate_class = JWTAuthentication()
@@ -239,26 +241,39 @@ class RoomViewSet(viewsets.ModelViewSet):
             )
 
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, roomId=None):
         password = request.GET.get('password')
 
         try:
-            instance = Room.objects.get(pk=pk)
+            instance = Room.objects.get(roomId=roomId)
 
-            if instance.password == password and instance.pk == int(pk):
+            # 방 비밀번호와 아이디를 맞췄다면
+            if instance.password == password and instance.roomId == int(roomId):
                 """
                 todo : 현재 유저 request.user -> instance의 room_users.append(request.user.username) 하기
                 """
-                room_users = instance.room_users
-                if request.user.username not in room_users:
-                    room_users.append(request.user.username)
-                    instance.save()
-                serialized_data = serialize('json', [instance])
-                return HttpResponse(serialized_data, content_type="text/json-comment-filtered", status=status.HTTP_202_ACCEPTED)
+                # 만약 이미 RoomUser가 있다면
+                if RoomUsers.objects.filter(room=instance, username=request.user.username).exists():
+                    roomusers = RoomUsers.objects.filter(room=instance)
+                    serialize = RoomUserSerializer(roomusers, many=True)
+                    return Response(serialize.data, status=status.HTTP_202_ACCEPTED)
+                
+                room_users = RoomUsers(room=instance, username=request.user.username)
+                room_users.save()
+
+                all_room_users = RoomUsers.objects.filter(room=instance)
+
+                serialize= RoomUserSerializer(all_room_users, many=True)
+                return Response(serialize.data, status=status.HTTP_202_ACCEPTED)
+            
+            # 방 비밀번호와 아이디를 맞추지 못했다면
             else:
                 return Response(
-                {
-                    "message": "해당 아이디의 방을 찾을 수 없습니다.",
+                {   
+                    "1" : instance.password, 
+                    "2" : password, 
+                    "3" : instance.roomId, 
+                    "4" : roomId
                 },
                     status=status.HTTP_401_UNAUTHORIZED
                 )
@@ -302,12 +317,9 @@ class UserJoinRoomAPIView(generics.ListCreateAPIView):
     def get_queryset(self):
         desired_value = self.request.user.username
         
-        #  room_users에 desired_value가 포함되어있는 쿼리셋 반환
-        queryset = Room.objects.extra(
-        where=["room_users LIKE %s"],
-        params=['%' + desired_value + '%']
-        ).all()
-        
+        #  RoomUser filter중 현재 user 이름이 있는 RoomUser 객체를 불러와서 room 필드들 추출해서 해당 room 필드들 반환
+        # __in 연산자를 사용하면 주어진 값의 리스트 또는 쿼리셋이 필터링할 필드에 포함되어 있는지 확인할 수 있습니다.
+        queryset = Room.objects.filter(roomusers__in=RoomUsers.objects.filter(username=desired_value))
         return queryset
            
     def list(self, request):
@@ -333,24 +345,26 @@ class CheckAPIView(APIView):
         room = Room.objects.get(pk=pk)
 
         # 오늘 생성된 출석 체크가 있는지
-        is_exists = CheckRoom.objects.filter(created_on=today, room=room).exists()
+        is_exists = Check.objects.filter(created_on=today, room=room).exists()
         
-        # 이미 오늘 생성된 인스턴스인 경우 업데이트 로직을 수행합니다.
+        # 이미 오늘 생성된 인스턴스인 경우 CheckUser만 생성해줍니다.
         if is_exists:
-            check_room = CheckRoom.objects.filter(created_on=today, room=room).first()
+            check_room = Check.objects.filter(created_on=today, room=room).first()
             
             # 현재 user만 출석 체크하기
-            user_dict = check_room.user_check
-            user_dict[user.username] = True
-            check_room.save()
+            check_user = CheckUser(check=check_room, username=request.user.username, is_check=True)
+            check_user.save()
+            
             serializer = CheckSerializer(check_room)
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)                
                 
-        # 오늘 생성되지 않은 경우 새로운 인스턴스를 생성합니다.
+        # 오늘 생성되지 않은 경우 새로운 Check 인스턴스와 CheckUser 인스턴스를 생성합니다.
         else:
-            new_check_room = CheckRoom(room=room, user_check={user.username:True})
-            new_check_room.save()
+            new_check_room = Check(room=room)
                         
+            # 현재 user만 출석 체크하기
+            check_user = CheckUser(check=new_check_room, username=request.user.username, is_check=True)
+            check_user.save()
 
             serializer = CheckSerializer(new_check_room)
 
@@ -363,7 +377,7 @@ class CheckAPIView(APIView):
         room = Room.objects.get(pk=pk)
         
         # 출석 체크들을 반환
-        check_room = CheckRoom.objects.filter(room=room).all()
+        check_room = Check.objects.filter(room=room).all()
         
         # 만약 출석체크가 없다면 반환합니다.
         if check_room.exists():

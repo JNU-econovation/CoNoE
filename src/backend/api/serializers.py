@@ -13,7 +13,7 @@ from rest_framework_simplejwt.serializers import (
 
 from rest_framework.validators import UniqueValidator
 
-from .models import Room, User, CheckRoom
+from .models import Room, User, Check, RoomUsers
 
 
 # Get Token을 위한 Serializer
@@ -34,7 +34,7 @@ class RegisterTokenSerializer(serializers.ModelSerializer):
     User registers through this serializer an receive tokens for authentication
     """
 
-    tokens = serializers.SerializerMethodField("getting_token", read_only=True)
+    token = serializers.SerializerMethodField("getting_token", read_only=True)
 
     def getting_token(self, user):
         refresh = TokenObtainPairSerializer.get_token(user)
@@ -45,7 +45,7 @@ class RegisterTokenSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("username", "email", "nickname", "password", "tokens")
+        fields = ("username", "email", "nickname", "password", "token")
 
     def create(self, validated_data):
         instance = self.Meta.model.objects.create_user(**validated_data)
@@ -107,15 +107,24 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            "pk",
             "user",
             "username",
             "title",
             "password",
-            "description",
-            "created_on",
+            "created_on"
             ]
         
+
+class RoomUserSerializer(serializers.ModelSerializer):
+    """
+    User In Room Serializer
+    """
+    class Meta:
+        model = RoomUsers
+        fields = [
+            "room",
+            "username"
+            ]
         
 class MadeRoomSerializer(serializers.ModelSerializer):
     
@@ -126,13 +135,13 @@ class MadeRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            "pk",
+            "roomId",
             "user",
             "username",
             "title",
             "password",
             "description",
-            "created_on",
+            "created_on"
             ]
 
 
@@ -147,10 +156,10 @@ class JoinRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            "pk",
+            "roomId",
             "title",
             "username",
-            "is_admin",
+            "is_admin"
             ]
         
     def get_is_admin(self, obj):
@@ -165,5 +174,5 @@ class JoinRoomSerializer(serializers.ModelSerializer):
         
 class CheckSerializer(serializers.ModelSerializer):
    class Meta:
-       model = CheckRoom
+       model = Check
        fields = '__all__'
