@@ -1,8 +1,8 @@
 import ApiController from "./ApiController.js";
 
 const getUserEnteredRoom = async () => {
-  ApiController({
-    url: "/search/joined/room/",
+  return await ApiController({
+    url: "/api/search/joined/room",
     method: "GET",
   });
 };

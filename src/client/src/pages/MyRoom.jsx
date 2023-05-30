@@ -28,34 +28,42 @@ const TitleBar = styled.div`
 `;
 
 function MyRoom() {
-  const roomInfoArray = [
-    {
-      roomId: "1",
-      roomName: "캡스톤 모임",
-      userName: "경주원",
-      isAdmin: true,
-    },
-    {
-      roomId: "2",
-      roomName: "인공지능",
-      userName: "이도연",
-      isAdmin: false,
-    },
-    {
-      roomId: "3",
-      roomName: "스프링",
-      userName: "이승건",
-      isAdmin: false,
-    },
-  ];
+  // const roomInfoArray = [
+  //   {
+  //     roomId: "1",
+  //     roomName: "캡스톤 모임",
+  //     userName: "경주원",
+  //     isAdmin: true,
+  //   },
+  //   {
+  //     roomId: "2",
+  //     roomName: "인공지능",
+  //     userName: "이도연",
+  //     isAdmin: false,
+  //   },
+  //   {
+  //     roomId: "3",
+  //     roomName: "스프링",
+  //     userName: "이승건",
+  //     isAdmin: false,
+  //   },
+  // ];
 
-  // const [roomInfoArray, setRoomInfoArray] = useState([]);
+  const [roomInfoArray, setRoomInfoArray] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOpenModal = () => setIsModalOpen(true);
 
+  const getRoom = async () => {
+    try {
+      const response = await RoomAPI.getUserEnteredRoom();
+      setRoomInfoArray([...response.data]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    const response = RoomAPI.getUserEnteredRoom();
-    console.log(response);
+    getRoom();
   }, []);
 
   return (

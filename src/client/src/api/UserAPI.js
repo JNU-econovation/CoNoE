@@ -9,7 +9,7 @@ const register = async (data) => {
   };
 
   const response = ApiController({
-    url: "/user/create/",
+    url: "/api/user/create",
     method: "POST",
     data: params,
   });
@@ -25,7 +25,7 @@ const login = async (data) => {
   };
 
   const response = ApiController({
-    url: "/user/login/",
+    url: "/api/user/login",
     method: "POST",
     data: params,
   });
@@ -40,7 +40,7 @@ const checkIsIdDuplicated = async (data) => {
   };
 
   const response = ApiController({
-    url: "/user/create/username",
+    url: "/api/user/create/username",
     method: "POST",
     data: params,
   });
