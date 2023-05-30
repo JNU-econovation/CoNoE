@@ -1,12 +1,15 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import routes from "../routes.js";
+import React from "react";
+import Layout from "../components/common/layout/Layout.jsx";
+import { useRecoilValue } from "recoil";
+import isLoggedInState from "../recoil/atoms/isLoggedInState.js";
 
 function Error() {
-  const navigate = useNavigate();
-  useEffect(() => {
-    navigate(routes.home);
-  });
+  const isLoggedIn = useRecoilValue(isLoggedInState);
+  return (
+    <Layout isLoggedIn={isLoggedIn}>
+      <div>404 not found</div>
+    </Layout>
+  );
 }
 
 export default Error;
