@@ -1,3 +1,5 @@
+import UserAPI from "../api/UserAPI.js";
+
 const SIGN_US = [
   {
     id: "userId",
@@ -5,8 +7,20 @@ const SIGN_US = [
     type: "text",
     validation: {
       required: "아이디를 입력해 주세요",
-      validate: (value) => {
-        return value !== "false" || "false";
+      validate: {
+        checkUrl: async (value) => {
+          if (value.length <= 2) {
+            return;
+          }
+          try {
+            await UserAPI.checkIsIdDuplicated(value);
+          } catch (e) {
+            return (
+              e.response.data === "아이디가 중복되었습니다." &&
+              "중복된 아이디입니다."
+            );
+          }
+        },
       },
     },
   },

@@ -1,4 +1,5 @@
 import ApiController from "./ApiController.js";
+import axios from "axios";
 
 const register = async (data) => {
   let params = {
@@ -9,23 +10,7 @@ const register = async (data) => {
   };
 
   const response = ApiController({
-    url: "/api/user/create",
-    method: "POST",
-    data: params,
-  });
-
-  localStorage.setItem("accessToken", response.tokens.access);
-  localStorage.setItem("refreshToken", response.tokens.refresh);
-};
-
-const login = async (data) => {
-  let params = {
-    username: data.userId,
-    password: data.password,
-  };
-
-  const response = ApiController({
-    url: "/api/user/login",
+    url: "/api/user/create/",
     method: "POST",
     data: params,
   });
@@ -34,18 +19,32 @@ const login = async (data) => {
   localStorage.setItem("refreshToken", response.token.refresh);
 };
 
+const login = async (data) => {
+  let params = {
+    username: data.userId,
+    password: data.password,
+  };
+
+  const response = await axios({
+    url: import.meta.env.VITE_BACKEND_API + "/api/user/login/",
+    method: "POST",
+    data: params,
+  });
+
+  localStorage.setItem("accessToken", response.data.token.access);
+  localStorage.setItem("refreshToken", response.data.token.refresh);
+};
+
 const checkIsIdDuplicated = async (data) => {
   let params = {
     username: data,
   };
 
-  const response = ApiController({
-    url: "/api/user/create/username",
+  await ApiController({
+    url: "/api/user/create/username/",
     method: "POST",
     data: params,
   });
-
-  return response;
 };
 
 export default { register, login, checkIsIdDuplicated };
