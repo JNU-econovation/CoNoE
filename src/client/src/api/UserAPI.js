@@ -10,7 +10,7 @@ const register = async (data) => {
   };
 
   const response = ApiController({
-    url: "/api/user/create/",
+    url: "/api/user/create",
     method: "POST",
     data: params,
   });
@@ -26,7 +26,7 @@ const login = async (data) => {
   };
 
   const response = await axios({
-    url: import.meta.env.VITE_BACKEND_API + "/api/user/login/",
+    url: import.meta.env.VITE_BACKEND_API + "/api/user/login",
     method: "POST",
     data: params,
   });
@@ -41,7 +41,7 @@ const checkIsIdDuplicated = async (data) => {
   };
 
   await ApiController({
-    url: "/api/user/create/username/",
+    url: "/api/user/create/username",
     method: "POST",
     data: params,
   });

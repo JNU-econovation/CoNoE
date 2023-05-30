@@ -13,7 +13,7 @@ const createRoom = async (data) => {
     password: data.roomPassword,
   };
   const { responseData } = await ApiController({
-    url: "/api/rooms/",
+    url: "/api/rooms",
     method: "POST",
     data: params,
   });
@@ -23,7 +23,7 @@ const createRoom = async (data) => {
 
 const enterRoom = async (data) => {
   await ApiController({
-    url: `api/rooms/${data.roomId}/?password=${data.password}`,
+    url: `api/rooms/${data.roomId}?password=${data.password}`,
   });
 };
 

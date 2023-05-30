@@ -1,4 +1,4 @@
-from uuid import uuid4
+from collections import defaultdict
 
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
@@ -13,7 +13,7 @@ from rest_framework_simplejwt.serializers import (
 
 from rest_framework.validators import UniqueValidator
 
-from .models import Room, User, CheckRoom
+from .models import Room, User, Check, RoomUsers
 
 
 # Get Token을 위한 Serializer
@@ -34,7 +34,7 @@ class RegisterTokenSerializer(serializers.ModelSerializer):
     User registers through this serializer an receive tokens for authentication
     """
 
-    tokens = serializers.SerializerMethodField("getting_token", read_only=True)
+    token = serializers.SerializerMethodField("getting_token", read_only=True)
 
     def getting_token(self, user):
         refresh = TokenObtainPairSerializer.get_token(user)
@@ -45,11 +45,11 @@ class RegisterTokenSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("username", "email", "nickname", "password", "tokens")
+        fields = ("username", "email", "nickname", "password", "token")
 
     def create(self, validated_data):
-        apiController = self.Meta.model.objects.create_user(**validated_data)
-        return apiController
+        instance = self.Meta.model.objects.create_user(**validated_data)
+        return instance
 
 
 # 로그인 Serializer
@@ -107,15 +107,24 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            "pk",
             "user",
             "username",
             "title",
             "password",
-            "description",
-            "created_on",
+            "created_on"
             ]
 
+
+class RoomUserSerializer(serializers.ModelSerializer):
+    """
+    User In Room Serializer
+    """
+    class Meta:
+        model = RoomUsers
+        fields = [
+            "room",
+            "username"
+            ]
 
 class MadeRoomSerializer(serializers.ModelSerializer):
 
@@ -126,13 +135,13 @@ class MadeRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            "pk",
+            "roomId",
             "user",
             "username",
             "title",
             "password",
             "description",
-            "created_on",
+            "created_on"
             ]
 
 
@@ -147,10 +156,10 @@ class JoinRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            "pk",
+            "roomId",
             "title",
             "username",
-            "is_admin",
+            "is_admin"
             ]
 
     def get_is_admin(self, obj):
@@ -165,5 +174,30 @@ class JoinRoomSerializer(serializers.ModelSerializer):
 
 class CheckSerializer(serializers.ModelSerializer):
    class Meta:
-       model = CheckRoom
+       model = Check
        fields = '__all__'
+
+
+class CheckUserSerializer(serializers.Serializer):
+    date = serializers.DateField()
+    attend = serializers.ListField(child=serializers.DictField())
+
+    def to_representation(self, instance):
+        check_users = defaultdict(list)
+
+        # check_users를 date별로 그루핑
+        for check_user in instance:
+            check_users[check_user.check_room.created_on].append({
+                "name": check_user.username,
+                "is_check": check_user.is_check
+            })
+
+        # 직렬화된 데이터 생성
+        serialized_data = []
+        for date, attend in check_users.items():
+            serialized_data.append({
+                "date": date.strftime("%d-%m-%y"),
+                "attend": attend
+            })
+
+        return serialized_data

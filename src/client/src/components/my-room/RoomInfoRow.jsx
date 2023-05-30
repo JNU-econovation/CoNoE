@@ -63,6 +63,10 @@ function RoomInfoRow({ id, name, manager }) {
   const onManageBtnClick = () => {
     navigate(`${routes.manageRoom}/${id}`);
   };
+
+  const onParticipateBtnClick = () => {
+    navigate(`${routes.room}/${id}`);
+  };
   return (
     <Container>
       <InfoBox>
@@ -72,7 +76,7 @@ function RoomInfoRow({ id, name, manager }) {
           <ManageBtn onClick={onManageBtnClick}>관리하기</ManageBtn>
         )}
       </InfoBox>
-      <Button onClick={() => console.log(id)}>참여하기</Button>
+      <Button onClick={onParticipateBtnClick}>참여하기</Button>
     </Container>
   );
 }

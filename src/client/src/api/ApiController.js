@@ -38,7 +38,7 @@ apiController.interceptors.response.use(
 
 const refreshAccessToken = async () => {
   const response = await axios({
-    url: import.meta.env.VITE_BACKEND_API + "/api/token/refresh/",
+    url: import.meta.env.VITE_BACKEND_API + "/api/token/refresh",
     method: "POST",
     data: { refresh: localStorage.getItem("refreshToken") },
   });
