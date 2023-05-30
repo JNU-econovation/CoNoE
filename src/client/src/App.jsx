@@ -13,13 +13,14 @@ import CreateRoom from "./pages/CreateRoom.jsx";
 import SignIn from "./pages/SignIn";
 import MyRoom from "./pages/MyRoom.jsx";
 import ManageRoom from "./pages/ManageRoom.jsx";
+import VideoCall from "./pages/VideoCall.jsx";
 
 function PrivateRouter() {
   return (
     <>
       <Route path={routes.home} element={<Home />} />
       <Route path={routes.myPage} element={<div>my page</div>} />
-      <Route path={routes.room} element={<div>Room</div>} />
+      <Route path={`${routes.room}/:roomId`} element={<VideoCall />} />
       <Route path={routes.myRoom} element={<MyRoom />} />
       <Route
         path={`${routes.attendance}/:roomId`}
