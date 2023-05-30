@@ -27,4 +27,4 @@ const enterRoom = async (data) => {
   });
 };
 
-export default { getUserEnteredRoom, createRoom };
+export default { getUserEnteredRoom, createRoom, enterRoom };

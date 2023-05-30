@@ -89,7 +89,7 @@ function MyRoom() {
           <RoomInfoRow
             key={info.roomId}
             id={info.roomId}
-            name={info.roomName}
+            name={info.title}
             manager={info.isAdmin ? "본인" : info.userName}
           />
         ))}
