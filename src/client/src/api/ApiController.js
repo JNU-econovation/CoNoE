@@ -1,14 +1,15 @@
 import axios from "axios";
 
-const instance = axios.create({
+const apiController = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_API,
 });
 
-instance.interceptors.request.use(
+apiController.interceptors.request.use(
   function (config) {
     config.headers["Content-Type"] = "application/json";
-    config.headers["Authorization"] = localStorage.getItem("accessToken");
-    config.headers["Refresh-Token"] = localStorage.getItem("refreshToken");
+    config.headers["Authorization"] = `Bearer ${localStorage?.getItem(
+      "accessToken"
+    )}`;
     return config;
   },
   function (error) {
@@ -17,39 +18,32 @@ instance.interceptors.request.use(
   }
 );
 
-instance.interceptors.response.use(
-  (response) => {
-    console.log(response);
-    return response.data.data;
+apiController.interceptors.response.use(
+  function (response) {
+    return response;
   },
-  async (error) => {
-    await errorController(error);
+  async function (err) {
+    const originalConfig = err.config;
+    if (err.response && err.response.status === 401) {
+      try {
+        await refreshAccessToken();
+        return apiController.request(originalConfig);
+      } catch (err) {
+        return Promise.reject(err);
+      }
+    }
+    return Promise.reject(err);
   }
 );
 
-const errorController = async (err) => {
-  const originalConfig = err.config;
-  if (err) {
-    try {
-      await refreshAccessToken();
-      return instance.request(originalConfig);
-    } catch (err) {
-      console.log("error", err.response);
-      window.location.href = "/";
-    }
-  }
-  return Promise.reject(err);
-};
-
 const refreshAccessToken = async () => {
-  const response = await axios.post(
-    import.meta.env.VITE_BACKEND_API + "/token/refresh",
-    {
-      data: { refresh: localStorage.getItem("refreshToken") },
-    }
-  );
+  const response = await axios({
+    url: import.meta.env.VITE_BACKEND_API + "/api/token/refresh/",
+    method: "POST",
+    data: { refresh: localStorage.getItem("refreshToken") },
+  });
 
-  localStorage.setItem("accessToken", response.refresh);
+  localStorage.setItem("accessToken", response.data.access);
 };
 
-export default instance;
+export default apiController;
