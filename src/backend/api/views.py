@@ -231,7 +231,9 @@ class RoomViewSet(viewsets.ModelViewSet):
         serializer = RoomSerializer(data=request.data, context={'request': request})
 
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            room = serializer.save(user=request.user)
+            room_users = RoomUsers(room=room, username=request.user.username)
+            room_users.save()
             return Response(serializer.data)
         else:
             return Response(
