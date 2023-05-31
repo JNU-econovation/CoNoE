@@ -331,6 +331,10 @@ class UserJoinRoomAPIView(generics.ListCreateAPIView):
         serializer = JoinRoomSerializer(queryset, many=True, context={
             'request': request
         })
+        
+        if serializer is None:
+            return Response("현재 접속한 방들이 없습니다.", status=status.H)
+
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     
 
@@ -371,8 +375,9 @@ class CheckAPIView(APIView):
             check_user = CheckUser(check_room=new_check_room, username=request.user.username, is_check=True)
             check_user.save()
 
+            serialize_check_user = CheckUser.objects.filter(check_room=new_check_room, username=request.user.username)
             serializer = CheckUserSerializer()
-            serialized_data = serializer.to_representation(check_user)
+            serialized_data = serializer.to_representation(serialize_check_user)
 
             return Response(serialized_data, status=status.HTTP_202_ACCEPTED)
             

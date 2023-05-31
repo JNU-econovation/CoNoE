@@ -65,7 +65,6 @@ class Room(models.Model):
     username = models.CharField(max_length=20, blank=False)
     title = models.CharField(max_length=200, blank=False)
     password = models.CharField(max_length=15, blank=False)
-    description = models.TextField(default="")
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

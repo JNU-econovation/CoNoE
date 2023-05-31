@@ -7,7 +7,7 @@ from .views import RegisterAndObtainTokenView, RoomViewSet, TokenObtainPairView,
 
 
 # Rooms url
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 router.register(r"rooms", RoomViewSet)
 
 urlpatterns = router.urls
