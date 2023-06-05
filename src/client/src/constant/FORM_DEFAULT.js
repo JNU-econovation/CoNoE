@@ -26,10 +26,25 @@ const MANAGE_ROOM = {
   roomPassword: "aaaa1234",
 };
 
+const ACCOUNT_SETTINGS = {
+  userId: "",
+  nickname: "",
+  userEmail: "",
+  password: "",
+};
+
 Object.freeze(SIGN_US);
 Object.freeze(SIGN_IN);
 Object.freeze(CREATE_ROOM);
 Object.freeze(ENTER_ROOM);
 Object.freeze(MANAGE_ROOM);
+Object.freeze(ACCOUNT_SETTINGS);
 
-export default { SIGN_US, SIGN_IN, CREATE_ROOM, ENTER_ROOM, MANAGE_ROOM };
+export default {
+  SIGN_US,
+  SIGN_IN,
+  CREATE_ROOM,
+  ENTER_ROOM,
+  MANAGE_ROOM,
+  ACCOUNT_SETTINGS,
+};

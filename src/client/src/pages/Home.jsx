@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import Layout from "../components/common/layout/Layout.jsx";
 import Explanation from "../components/home/Explanation.jsx";
-import BlueButton from "../components/common/BlueButton.jsx";
+import DefaultButton from "../components/common/DefaultButton.jsx";
 
 import routes from "../routes.js";
 
@@ -46,7 +46,7 @@ function Home() {
   return (
     <Layout isLoggedIn={true}>
       <Explanation />
-      <BlueButton
+      <DefaultButton
         text="내가 참여한 방"
         onClick={() => {
           navigate(routes.myRoom);

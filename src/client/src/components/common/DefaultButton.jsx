@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 
 const Container = styled.button`
@@ -19,30 +19,46 @@ const Container = styled.button`
   }
 
   transition: background-color 0.25s ease-in-out;
+
+  ${({ isRed }) =>
+    isRed &&
+    css`
+      background-color: ${({ theme }) => theme.color.alert};
+      &:hover {
+        background-color: #d13127;
+      }
+    `}
 `;
 
-function BlueButton({ text, width, onClick, style, type }) {
+function DefaultButton({ text, width, onClick, style, type, isRed }) {
   return (
-    <Container type={type} style={{ width: width, ...style }} onClick={onClick}>
+    <Container
+      isRed={isRed}
+      type={type}
+      style={{ width: width, ...style }}
+      onClick={onClick}
+    >
       {text}
     </Container>
   );
 }
 
-BlueButton.propTypes = {
+DefaultButton.propTypes = {
   text: PropTypes.string,
   width: PropTypes.string,
   onClick: PropTypes.func,
   style: PropTypes.object,
   type: PropTypes.string,
+  isRed: PropTypes.bool,
 };
 
-BlueButton.defaultProps = {
+DefaultButton.defaultProps = {
   text: "버튼",
   width: "200px",
   onClick: () => {},
   style: {},
   type: "",
+  isRed: false,
 };
 
-export default React.memo(BlueButton);
+export default React.memo(DefaultButton);

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import Layout from "../components/common/layout/Layout.jsx";
 import StyledH3 from "../styles/StyledH3.js";
-import BlueButton from "../components/common/BlueButton";
+import DefaultButton from "../components/common/DefaultButton.jsx";
 import RoomInfoRow from "../components/my-room/RoomInfoRow.jsx";
 import EnterRoomModal from "../components/my-room/EnterRoomModal.jsx";
 import BackdropModal from "../components/common/modal/BackdropModal.jsx";
@@ -74,7 +74,7 @@ function MyRoom() {
           <StyledH3 style={{ width: "auto", marginBottom: 0 }}>
             나의 방
           </StyledH3>
-          <BlueButton
+          <DefaultButton
             text="입장하기"
             type="button"
             onClick={handleOpenModal}
