@@ -140,7 +140,6 @@ class MadeRoomSerializer(serializers.ModelSerializer):
             "username",
             "title",
             "password",
-            "description",
             "created_on"
             ]
 
