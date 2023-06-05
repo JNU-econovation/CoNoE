@@ -22,13 +22,12 @@ function SignUs() {
         <StyledH3>회원가입</StyledH3>
         <Form
           onSubmit={async (data) => {
-            console.log(data);
             try {
               await UserAPI.register(data);
               setIsLoggedIn(true);
               navigate(routes.home);
             } catch (e) {
-              console.log(e);
+              alert(e.message.data);
             }
           }}
           onError={(err) => console.error(err)}

@@ -37,13 +37,19 @@ apiController.interceptors.response.use(
 );
 
 const refreshAccessToken = async () => {
-  const response = await axios({
-    url: import.meta.env.VITE_BACKEND_API + "/api/token/refresh",
-    method: "POST",
-    data: { refresh: localStorage.getItem("refreshToken") },
-  });
+  try {
+    const response = await axios({
+      url: import.meta.env.VITE_BACKEND_API + "/api/token/refresh",
+      method: "POST",
+      data: { refresh: localStorage.getItem("refreshToken") },
+    });
 
-  localStorage.setItem("accessToken", response.data.access);
+    localStorage.setItem("accessToken", response.data.access);
+  } catch (e) {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    window.location("/");
+  }
 };
 
 export default apiController;

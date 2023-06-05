@@ -22,12 +22,15 @@ function Home() {
       <Form
         onSubmit={async (data) => {
           try {
-            await UserAPI.login(data);
+            console.log(data);
+            const response = await UserAPI.login(data);
+            console.log(response);
             setIsLoggedIn(true);
             navigate(routes.home);
-          } catch (error) {}
+          } catch (error) {
+            console.log(error);
+          }
         }}
-        onError={(err) => console.log(err)}
         inputInformations={FORM_INFO.SIGN_IN}
         defaultValues={FORM_DEFAULT.SIGN_IN}
         buttonLabel="로그인"

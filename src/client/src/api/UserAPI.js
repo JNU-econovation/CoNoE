@@ -9,14 +9,15 @@ const register = async (data) => {
     email: data.userEmail,
   };
 
-  const response = ApiController({
+  const response = await ApiController({
     url: "/api/user/create",
     method: "POST",
     data: params,
   });
 
-  localStorage.setItem("accessToken", response.token.access);
-  localStorage.setItem("refreshToken", response.token.refresh);
+  localStorage.setItem("username", response.data.user.username);
+  localStorage.setItem("accessToken", response.data.token.access);
+  localStorage.setItem("refreshToken", response.data.token.refresh);
 };
 
 const login = async (data) => {
@@ -31,6 +32,7 @@ const login = async (data) => {
     data: params,
   });
 
+  localStorage.setItem("username", response.data.user.username);
   localStorage.setItem("accessToken", response.data.token.access);
   localStorage.setItem("refreshToken", response.data.token.refresh);
 };
