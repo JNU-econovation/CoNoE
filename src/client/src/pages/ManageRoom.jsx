@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -10,6 +10,7 @@ import Form from "../components/common/form/Form.jsx";
 import FORM_DEFAULT from "../constant/FORM_DEFAULT.js";
 import FORM_INFO from "../constant/FORM_INFO.js";
 import routes from "../routes.js";
+import RoomAPI from "../api/RoomAPI.js";
 
 const FormHeader = styled.div`
   width: 100%;
@@ -42,6 +43,21 @@ function ManageRoom() {
     navigate(`${routes.attendance}/${roomId}`);
   };
   // 추후 defaultValues를 api get response 값으로 변경할 것
+
+  const loadDefaultValues = async () => {
+    try {
+      // const response = await RoomAPI.getRoomSetting({ roomId });
+      // console.log(response);
+    } catch (e) {
+      alert(e.message.data);
+    }
+  };
+
+  useEffect(() => {
+    loadDefaultValues();
+    console.log(roomId);
+  }, []);
+
   return (
     <Layout isLoggedIn={true} title="방 관리하기">
       <FormPageContainer>

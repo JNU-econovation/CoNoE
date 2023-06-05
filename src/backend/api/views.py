@@ -53,24 +53,24 @@ class RegisterAndObtainTokenView(APIView):
         
         # username 중복 체크
         #id_serializer = UsernameUniqueCheckSerializer(data=request.data)
-           
-        pwd_serializer = PasswordSerializer(data=request.data) 
-              
-        if pwd_serializer.validate_password(pwd=request.data.get("password")) == False:    
+
+        pwd_serializer = PasswordSerializer(data=request.data)
+
+        if pwd_serializer.validate_password(pwd=request.data.get("password")) == False:
             return Response("비밀번호는 영어와 숫자를 포함해야 하며, 8글자 이상이어야 합니다.", status=status.HTTP_400_BAD_REQUEST)
-        
-        serializer = RegisterTokenSerializer(data=request.data)                        
-        
-        if not serializer.is_valid(): 
-            return Response(serializer.errors , status=status.HTTP_500_INTERNAL_SERVER_ERROR) # 
-        
-        user = serializer.save() 
+
+        serializer = RegisterTokenSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors , status=status.HTTP_500_INTERNAL_SERVER_ERROR) #
+
+        user = serializer.save()
         if not user:
             return Response("Error detected.", status=status.HTTP_500_INTERNAL_SERVER_ERROR) # not user
-        
+
         json = serializer.data
         return Response(json, status=status.HTTP_201_CREATED)
-        
+
 
 class UsernameCheckAPIView(APIView):
     """
@@ -81,22 +81,22 @@ class UsernameCheckAPIView(APIView):
     authentication_classes = []
 
     def post(self, request, format="json"):
-        
+
         # username 중복 체크
         serializer = UsernameUniqueCheckSerializer(data=request.data)
-                                             
-        if serializer.is_valid(): 
+
+        if serializer.is_valid():
             json = serializer.data
             return Response(json, status=status.HTTP_201_CREATED)
         else:
             return Response("아이디가 중복되었습니다.", status=status.HTTP_400_BAD_REQUEST)
-        
+
 
 class AuthAPIView(APIView):
-    
+
     permission_classes = [AllowAny]
     lookup_field = 'pk'
-    
+
     # 유저 정보 확인
     def get(self, request):
         try:
@@ -186,7 +186,7 @@ class RoomViewSet(viewsets.ModelViewSet):
         queryset = Room.objects.all().order_by("-created_on")
 
         # If search params is given then list matching the param is returned
-        # 찾고자하는 방이 있었으면, 해당 방을 최신 생성순으로 리턴해준다. 
+        # 찾고자하는 방이 있었으면, 해당 방을 최신 생성순으로 리턴해준다.
         search = self.request.query_params.get("search", None)
         if search is not None:
             queryset = Room.objects.filter(title__icontains=search).order_by(
@@ -225,7 +225,7 @@ class RoomViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
         return Response({}, status=status.HTTP_204_NO_CONTENT)
-        
+
 
     def create(self, request, *args, **kwargs):
         serializer = RoomSerializer(data=request.data, context={'request': request})
@@ -260,7 +260,7 @@ class RoomViewSet(viewsets.ModelViewSet):
                     roomusers = RoomUsers.objects.filter(room=instance)
                     serialize = RoomUserSerializer(roomusers, many=True)
                     return Response(serialize.data, status=status.HTTP_202_ACCEPTED)
-                
+
                 room_users = RoomUsers(room=instance, username=request.user.username)
                 room_users.save()
 
@@ -268,14 +268,14 @@ class RoomViewSet(viewsets.ModelViewSet):
 
                 serialize= RoomUserSerializer(all_room_users, many=True)
                 return Response(serialize.data, status=status.HTTP_202_ACCEPTED)
-            
+
             # 방 비밀번호와 아이디를 맞추지 못했다면
             else:
                 return Response(
-                {   
-                    "1" : instance.password, 
-                    "2" : password, 
-                    "3" : instance.roomId, 
+                {
+                    "1" : instance.password,
+                    "2" : password,
+                    "3" : instance.roomId,
                     "4" : roomId
                 },
                     status=status.HTTP_401_UNAUTHORIZED
@@ -287,7 +287,6 @@ class RoomViewSet(viewsets.ModelViewSet):
                 },
                 status=status.HTTP_404_NOT_FOUND
             )
-
 
 class UserMadeRoomAPIView(generics.RetrieveAPIView):
     """
@@ -321,7 +320,7 @@ class UserMadeRoomAPIView(generics.RetrieveAPIView):
     
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     
-    
+
 class UserJoinRoomAPIView(generics.ListCreateAPIView):
     """
     Return Rooms made by request.user
@@ -332,12 +331,12 @@ class UserJoinRoomAPIView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         desired_value = self.request.user.username
-        
+
         #  RoomUser filter중 현재 user 이름이 있는 RoomUser 객체를 불러와서 room 필드들 추출해서 해당 room 필드들 반환
         # __in 연산자를 사용하면 주어진 값의 리스트 또는 쿼리셋이 필터링할 필드에 포함되어 있는지 확인할 수 있습니다.
         queryset = Room.objects.filter(roomusers__in=RoomUsers.objects.filter(username=desired_value))
         return queryset
-           
+
     def list(self, request):
         # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = self.get_queryset()
@@ -349,7 +348,7 @@ class UserJoinRoomAPIView(generics.ListCreateAPIView):
             return Response("현재 접속한 방들이 없습니다.", status=status.H)
 
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-    
+
 
 class CheckAPIView(APIView):
     """
@@ -364,27 +363,27 @@ class CheckAPIView(APIView):
 
         # 오늘 생성된 출석 체크가 있는지
         is_exists = Check.objects.filter(created_on=today, room=room).exists()
-        
+
         # 이미 오늘 생성된 인스턴스인 경우 CheckUser만 생성해줍니다.
         if is_exists:
             check_room = Check.objects.filter(created_on=today, room=room).first()
-            
+
             # 현재 user만 출석 체크하기 -> 이미 출첵 한 유저면 ㄴㄴㄴ
             if not CheckUser.objects.filter(check_room=check_room, username=request.user.username).exists():
                 check_user = CheckUser(check_room=check_room, username=request.user.username, is_check=True)
                 check_user.save()
-            
+
             check_user = CheckUser.objects.filter(check_room=check_room, username=request.user.username)
             serializer = CheckUserSerializer()
             serialized_data = serializer.to_representation(check_user)
-            return Response(serialized_data, status=status.HTTP_202_ACCEPTED)                
-                
+            return Response(serialized_data, status=status.HTTP_202_ACCEPTED)
+
         # 오늘 생성되지 않은 경우 새로운 Check 인스턴스와 CheckUser 인스턴스를 생성합니다.
         else:
             new_check_room = Check(room=room)
             new_check_room.save()
 
-            # 현재 user만 출석 체크하기 
+            # 현재 user만 출석 체크하기
             check_user = CheckUser(check_room=new_check_room, username=request.user.username, is_check=True)
             check_user.save()
 
@@ -393,18 +392,18 @@ class CheckAPIView(APIView):
             serialized_data = serializer.to_representation(serialize_check_user)
 
             return Response(serialized_data, status=status.HTTP_202_ACCEPTED)
-            
-    
+
+
     def get(self, request):
         roomId = request.query_params.get('roomId')
         room = Room.objects.get(roomId=roomId)
-        
+
         # 출석 체크들을 반환
         checks = Check.objects.filter(room=room)
 
         # 해당 출석 체크한 유저들을 반환
         check_users = CheckUser.objects.filter(check_room__in=checks)
-        
+
         # check_users가 비어 있는 경우
         if not check_users.exists():
             return Response({"message": "No check users found."}, status=status.HTTP_204_NO_CONTENT)
