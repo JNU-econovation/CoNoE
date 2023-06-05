@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Layout from "../components/common/layout/Layout.jsx";
@@ -7,6 +7,8 @@ import BlueButton from "../components/common/BlueButton";
 import RoomInfoRow from "../components/my-room/RoomInfoRow.jsx";
 import EnterRoomModal from "../components/my-room/EnterRoomModal.jsx";
 import BackdropModal from "../components/common/modal/BackdropModal.jsx";
+
+import RoomAPI from "../api/RoomAPI.js";
 
 const Container = styled.article`
   width: 700px;
@@ -26,30 +28,44 @@ const TitleBar = styled.div`
 `;
 
 function MyRoom() {
-  const roomInfoArray = [
-    {
-      roomId: "1",
-      roomName: "캡스톤 모임",
-      userName: "경주원",
-      isAdmin: true,
-    },
-    {
-      roomId: "2",
-      roomName: "인공지능",
-      userName: "이도연",
-      isAdmin: false,
-    },
-    {
-      roomId: "3",
-      roomName: "스프링",
-      userName: "이승건",
-      isAdmin: false,
-    },
-  ];
+  // const roomInfoArray = [
+  //   {
+  //     roomId: "1",
+  //     roomName: "캡스톤 모임",
+  //     userName: "경주원",
+  //     isAdmin: true,
+  //   },
+  //   {
+  //     roomId: "2",
+  //     roomName: "인공지능",
+  //     userName: "이도연",
+  //     isAdmin: false,
+  //   },
+  //   {
+  //     roomId: "3",
+  //     roomName: "스프링",
+  //     userName: "이승건",
+  //     isAdmin: false,
+  //   },
+  // ];
 
+  const [roomInfoArray, setRoomInfoArray] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const handleOpenModal = () => setIsModalOpen(true);
+
+  const getRoom = async () => {
+    try {
+      const response = await RoomAPI.getUserEnteredRoom();
+      setRoomInfoArray([...response.data]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (isModalOpen) return;
+    getRoom();
+  }, [isModalOpen]);
 
   return (
     <Layout isLoggedIn={true} title="나의 방">
@@ -73,8 +89,8 @@ function MyRoom() {
         {roomInfoArray.map((info) => (
           <RoomInfoRow
             key={info.roomId}
-            id={info.roomId}
-            name={info.roomName}
+            id={String(info.roomId)}
+            name={info.title}
             manager={info.isAdmin ? "본인" : info.userName}
           />
         ))}

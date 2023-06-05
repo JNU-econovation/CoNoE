@@ -78,7 +78,7 @@ cover/
 # Django stuff:
 
 # Flask stuff:
-instance/
+apiController/
 .webassets-cache
 
 # Scrapy stuff:
@@ -385,7 +385,7 @@ pytestdebug.log
 # Django stuff:
 
 # Flask stuff:
-instance/
+apiController/
 .webassets-cache
 
 # Scrapy stuff:
@@ -452,9 +452,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-# pytype static type analyzer
-.pytype/
 
 # profiling data
 .prof

@@ -1,3 +1,5 @@
+import UserAPI from "../api/UserAPI.js";
+
 const SIGN_US = [
   {
     id: "userId",
@@ -5,8 +7,20 @@ const SIGN_US = [
     type: "text",
     validation: {
       required: "아이디를 입력해 주세요",
-      validate: (value) => {
-        return value !== "false" || "false";
+      validate: {
+        checkUrl: async (value) => {
+          if (value.length <= 2) {
+            return;
+          }
+          try {
+            await UserAPI.checkIsIdDuplicated(value);
+          } catch (e) {
+            return (
+              e.response.data === "아이디가 중복되었습니다." &&
+              "중복된 아이디입니다."
+            );
+          }
+        },
       },
     },
   },
@@ -104,7 +118,7 @@ const ENTER_ROOM = [
     },
   },
   {
-    id: "roomPassword",
+    id: "password",
     label: "비밀번호",
     type: "password",
     validation: {
@@ -131,13 +145,16 @@ const MANAGE_ROOM = [
   {
     id: "roomName",
     label: "방 이름",
+    type: "text",
     validation: {
       required: "방 이름을 입력해 주세요",
+      disabled: true,
     },
   },
   {
     id: "roomPassword",
     label: "비밀번호",
+    type: "text",
     validation: {
       required: "비밀번호를 입력해 주세요",
       minLength: { value: 8, message: "비밀번호는 8글자 이상입니다" },
@@ -145,6 +162,7 @@ const MANAGE_ROOM = [
         value: /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/,
         message: "비밀번호는 숫자와 영어를 1글자 이상 포함합니다",
       },
+      disabled: true,
     },
   },
 ];
