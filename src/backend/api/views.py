@@ -288,24 +288,37 @@ class RoomViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-class UserMadeRoomAPIView(generics.ListCreateAPIView):
+
+class UserMadeRoomAPIView(generics.RetrieveAPIView):
     """
     Return Rooms made by request.user
     """
     queryset = Room.objects.all()
-    serializer_class = RoomSerializer
+    serializer_class = MadeRoomSerializer
     permission_classes = [IsAuthenticated]
-
+    
     def get_queryset(self):
+                
+        roomId = self.kwargs.get('roomId')  # URL의 roomId 값을 가져옴
 
-        # By default list of rooms return
-        queryset = Room.objects.filter(username__exact=self.request.user.username).order_by("-created_on")
-        return queryset
+        # 현재 room만 가져온다.
+        queryset = Room.objects.filter(roomId=roomId)
+        
+        if queryset.exists() and queryset.first().username == self.request.user.username:
+            return queryset
+        
+        return Room.objects.none()  # 사용자가 소유한 room이 없을 경우 빈 쿼리셋 반환
 
-    def list(self, request):
-        # Note the use of `get_queryset()` instead of `self.queryset`
+    
+    def retrieve(self, request, *args, **kwargs):
+
         queryset = self.get_queryset()
-        serializer = MadeRoomSerializer(queryset, many=True)
+                
+        if not queryset.exists():
+            return Response("유저가 만든 방이 아닙니다.", status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = self.get_serializer(queryset, many=True) 
+    
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
 
