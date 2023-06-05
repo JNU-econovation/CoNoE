@@ -23,7 +23,7 @@ urlpatterns += [
     
     path("rooms/<int:roomId>", RoomViewSet.as_view(actions = {'get': 'retrieve'})),
     
-    path("search/room", UserMadeRoomAPIView.as_view(), name="user_made_room"),
+    path("search/room/<int:roomId>", UserMadeRoomAPIView.as_view(), name="user_made_room"),    
     
     path("search/joined/room", UserJoinRoomAPIView.as_view(), name="user_join_room"),
     
