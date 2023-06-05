@@ -9,6 +9,7 @@ import Form from "../components/common/form/Form.jsx";
 import FORM_DEFAULT from "../constant/FORM_DEFAULT.js";
 import FORM_INFO from "../constant/FORM_INFO.js";
 import routes from "../routes.js";
+import RoomAPI from "../api/RoomAPI.js";
 
 function CreateRoom() {
   const navigate = useNavigate();
@@ -17,7 +18,14 @@ function CreateRoom() {
       <FormPageContainer>
         <StyledH3>방 만들기</StyledH3>
         <Form
-          onSubmit={() => navigate(routes.myRoom)}
+          onSubmit={async (data) => {
+            try {
+              await RoomAPI.createRoom(data);
+              navigate(routes.myRoom);
+            } catch (e) {
+              alert(e.message.data);
+            }
+          }}
           onError={(err) => console.log(err)}
           defaultValues={FORM_DEFAULT.CREATE_ROOM}
           inputInformations={FORM_INFO.CREATE_ROOM}
