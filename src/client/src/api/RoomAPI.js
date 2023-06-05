@@ -24,7 +24,15 @@ const createRoom = async (data) => {
 const enterRoom = async (data) => {
   await ApiController({
     url: `api/rooms/${data.roomId}?password=${data.password}`,
+    method: "GET",
   });
 };
 
-export default { getUserEnteredRoom, createRoom, enterRoom };
+const getRoomSetting = async ({ roomId }) => {
+  await ApiController({
+    url: `api/search/room/${roomId}`,
+    method: "GET",
+  });
+};
+
+export default { getUserEnteredRoom, createRoom, enterRoom, getRoomSetting };

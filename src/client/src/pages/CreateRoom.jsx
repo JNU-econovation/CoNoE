@@ -22,8 +22,8 @@ function CreateRoom() {
             try {
               await RoomAPI.createRoom(data);
               navigate(routes.myRoom);
-            } catch (err) {
-              alert(err.message);
+            } catch (e) {
+              alert(e.message.data);
             }
           }}
           onError={(err) => console.log(err)}

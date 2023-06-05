@@ -145,13 +145,16 @@ const MANAGE_ROOM = [
   {
     id: "roomName",
     label: "방 이름",
+    type: "text",
     validation: {
       required: "방 이름을 입력해 주세요",
+      disabled: true,
     },
   },
   {
     id: "roomPassword",
     label: "비밀번호",
+    type: "text",
     validation: {
       required: "비밀번호를 입력해 주세요",
       minLength: { value: 8, message: "비밀번호는 8글자 이상입니다" },
@@ -159,6 +162,7 @@ const MANAGE_ROOM = [
         value: /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/,
         message: "비밀번호는 숫자와 영어를 1글자 이상 포함합니다",
       },
+      disabled: true,
     },
   },
 ];

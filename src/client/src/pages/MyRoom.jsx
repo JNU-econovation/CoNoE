@@ -63,8 +63,9 @@ function MyRoom() {
   };
 
   useEffect(() => {
+    if (isModalOpen) return;
     getRoom();
-  }, []);
+  }, [isModalOpen]);
 
   return (
     <Layout isLoggedIn={true} title="나의 방">
@@ -88,7 +89,7 @@ function MyRoom() {
         {roomInfoArray.map((info) => (
           <RoomInfoRow
             key={info.roomId}
-            id={info.roomId}
+            id={String(info.roomId)}
             name={info.title}
             manager={info.isAdmin ? "본인" : info.userName}
           />
