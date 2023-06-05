@@ -15,7 +15,9 @@ const register = async (data) => {
     data: params,
   });
 
-  localStorage.setItem("username", response.data.user.username);
+  console.log(response);
+
+  localStorage.setItem("username", response.data.username);
   localStorage.setItem("accessToken", response.data.token.access);
   localStorage.setItem("refreshToken", response.data.token.refresh);
 };
