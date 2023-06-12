@@ -19,19 +19,23 @@ export class WebRTC {
     this.roomId = roomId;
   }
 
-  addTracks = async (stream) => {
-    await stream
+  addTracks = (stream) => {
+    console.log("add Tracks");
+    // console.log(stream.getTracks());
+    stream
       .getTracks()
       .forEach((track) => this.peerConnection.addTrack(track, stream));
   };
 
   setIceCandidate = () => {
+    console.log("setIceCandidate");
     this.peerConnection.addEventListener("icecandidate", (data) => {
       this.socket.emit("ice", data.candidate, this.roomId);
     });
   };
 
   setRemoteVideo = (ref) => {
+    console.log("setRemoteVideo");
     this.peerConnection.addEventListener("track", (data) => {
       ref.current.srcObject = data.streams[0];
     });

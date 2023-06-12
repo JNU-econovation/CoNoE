@@ -35,7 +35,7 @@ function VideoCall() {
 
   const initCall = async () => {
     localStreamRef.current = await getMedia({
-      localStreamRef,
+      localStream: localStreamRef.current,
       myVideoRef,
       setCameraArray,
       setMicArray,
