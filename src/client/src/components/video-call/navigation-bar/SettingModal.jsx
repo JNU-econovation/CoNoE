@@ -15,18 +15,18 @@ function SettingModal({ localStreamRef, cameraArray, micArray }) {
   const micSelectRef = useRef();
 
   const handleCameraChange = async () => {
-    await getMedia({
+    localStreamRef.current = await getMedia({
       micId: String(micSelectRef.current.value),
       cameraId: String(cameraSelectRef.value),
-      localStreamRef,
+      localStream: localStreamRef.current,
     });
   };
 
   const handleMicChange = async () => {
-    await getMedia({
+    localStreamRef.current = await getMedia({
       micId: String(micSelectRef.current.value),
       cameraId: String(cameraSelectRef.current.value),
-      localStreamRef,
+      localStream: localStreamRef.current,
     });
   };
 

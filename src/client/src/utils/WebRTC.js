@@ -19,9 +19,10 @@ export class WebRTC {
     this.roomId = roomId;
   }
 
-  addTracks = async (stream) => {
+  addTracks = (stream) => {
     console.log("add Tracks");
-    await stream
+    // console.log(stream.getTracks());
+    stream
       .getTracks()
       .forEach((track) => this.peerConnection.addTrack(track, stream));
   };
