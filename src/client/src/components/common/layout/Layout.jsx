@@ -22,6 +22,7 @@ const Container = styled.div`
 const Main = styled.main`
   width: 100vw;
   min-height: calc(100vh - 200px);
+  padding: 4rem 0;
 
   position: relative;
 

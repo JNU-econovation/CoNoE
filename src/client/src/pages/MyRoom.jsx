@@ -91,7 +91,7 @@ function MyRoom() {
             key={info.roomId}
             id={String(info.roomId)}
             name={info.title}
-            manager={info.isAdmin ? "본인" : info.userName}
+            manager={info.isAdmin ? "본인" : info.username}
           />
         ))}
       </Container>
