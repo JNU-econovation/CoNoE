@@ -7,29 +7,29 @@ from .views import RegisterAndObtainTokenView, RoomViewSet, TokenObtainPairView,
 
 
 # Rooms url
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 router.register(r"rooms", RoomViewSet)
 
 urlpatterns = router.urls
 
 # Authentications Urls
 urlpatterns += [
-    path("user/create/", RegisterAndObtainTokenView.as_view(), name="create_user"),
+    path("user/create", RegisterAndObtainTokenView.as_view(), name="create_user"),
     
-    path("user/create/username/", UsernameCheckAPIView.as_view(), name="check_username"),
+    path("user/create/username", UsernameCheckAPIView.as_view(), name="check_username"),
     
     # post - 로그인, delete - 로그아웃, get - 유저 정보
-    path("user/login/", AuthAPIView.as_view(), name="login_user"),
+    path("user/login", AuthAPIView.as_view(), name="login_user"),
     
-    path("rooms/<int:pk>/", RoomViewSet.as_view(actions = {'get': 'retrieve'})),
+    path("rooms/<int:roomId>", RoomViewSet.as_view(actions = {'get': 'retrieve'})),
     
-    path("search/room/", UserMadeRoomAPIView.as_view(), name="user_made_room"),
+    path("search/room/<int:roomId>", UserMadeRoomAPIView.as_view(), name="user_made_room"),
     
     path("search/joined/room", UserJoinRoomAPIView.as_view(), name="user_join_room"),
     
     path("check/room", CheckAPIView.as_view(), name="user_check_room"),
 
-    path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
+    path("token", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("token/refresh", TokenRefreshView.as_view(), name="token_refresh"),
+    path("token/verify", TokenVerifyView.as_view(), name="token_verify"),
 ]

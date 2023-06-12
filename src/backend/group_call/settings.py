@@ -126,10 +126,9 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 # ADDED CUSTOM CONFIGURATION
-if DEBUG:
-    CORS_ALLOW_ALL_ORIGINS = True
-else:
-    CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = False
+
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -149,6 +148,17 @@ REST_FRAMEWORK = {
 
 # Custom User Model
 AUTH_USER_MODEL = "api.User"
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'api.serializers.RegisterTokenSerializer',
+}
+
+APPEND_SLASH=False
+
 
 # Pointing to channels to routing configurations
 ASGI_APPLICATION = "group_call.asgi.application"

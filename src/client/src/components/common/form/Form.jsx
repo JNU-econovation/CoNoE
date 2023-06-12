@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import LabeledInput from "./LabeledInput.jsx";
-import BlueButton from "../BlueButton.jsx";
+import DefaultButton from "../DefaultButton.jsx";
 
 const StyledForm = styled.form`
   width: 350px;
@@ -42,7 +42,7 @@ function Form({
           />
         ))}
 
-        <BlueButton
+        <DefaultButton
           type="submit"
           text={buttonLabel}
           width="100%"
@@ -56,7 +56,8 @@ function Form({
 Form.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onError: PropTypes.func,
-  defaultValues: PropTypes.object.isRequired,
+  defaultValues: PropTypes.oneOfType([PropTypes.object, PropTypes.func])
+    .isRequired,
   inputInformations: PropTypes.arrayOf(
     PropTypes.exact({
       id: PropTypes.string.isRequired,

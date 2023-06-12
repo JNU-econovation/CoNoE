@@ -10,6 +10,7 @@ import Form from "../components/common/form/Form.jsx";
 import FORM_DEFAULT from "../constant/FORM_DEFAULT.js";
 import FORM_INFO from "../constant/FORM_INFO.js";
 import routes from "../routes.js";
+import RoomAPI from "../api/RoomAPI.js";
 
 const FormHeader = styled.div`
   width: 100%;
@@ -41,7 +42,21 @@ function ManageRoom() {
   const onAttendBtnClick = () => {
     navigate(`${routes.attendance}/${roomId}`);
   };
-  // 추후 defaultValues를 api get response 값으로 변경할 것
+
+  const loadDefaultValues = async () => {
+    try {
+      const data = await RoomAPI.getRoomSetting({ roomId });
+      return {
+        roomId: data.roomId,
+        roomPassword: data.password,
+        roomName: data.title,
+      };
+    } catch (e) {
+      alert(e.message.data);
+      return FORM_DEFAULT.MANAGE_ROOM;
+    }
+  };
+
   return (
     <Layout isLoggedIn={true} title="방 관리하기">
       <FormPageContainer>
@@ -56,7 +71,7 @@ function ManageRoom() {
             navigate(-1);
           }}
           onError={(err) => console.log(err)}
-          defaultValues={FORM_DEFAULT.MANAGE_ROOM}
+          defaultValues={loadDefaultValues}
           inputInformations={FORM_INFO.MANAGE_ROOM}
           buttonLabel="저장하기"
         />
