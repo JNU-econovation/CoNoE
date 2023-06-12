@@ -56,7 +56,8 @@ function Form({
 Form.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onError: PropTypes.func,
-  defaultValues: PropTypes.object.isRequired,
+  defaultValues: PropTypes.oneOfType([PropTypes.object, PropTypes.func])
+    .isRequired,
   inputInformations: PropTypes.arrayOf(
     PropTypes.exact({
       id: PropTypes.string.isRequired,

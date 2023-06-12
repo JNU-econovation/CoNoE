@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -42,21 +42,20 @@ function ManageRoom() {
   const onAttendBtnClick = () => {
     navigate(`${routes.attendance}/${roomId}`);
   };
-  // 추후 defaultValues를 api get response 값으로 변경할 것
 
   const loadDefaultValues = async () => {
     try {
-      // const response = await RoomAPI.getRoomSetting({ roomId });
-      // console.log(response);
+      const data = await RoomAPI.getRoomSetting({ roomId });
+      return {
+        roomId: data.roomId,
+        roomPassword: data.password,
+        roomName: data.title,
+      };
     } catch (e) {
       alert(e.message.data);
+      return FORM_DEFAULT.MANAGE_ROOM;
     }
   };
-
-  useEffect(() => {
-    loadDefaultValues();
-    console.log(roomId);
-  }, []);
 
   return (
     <Layout isLoggedIn={true} title="방 관리하기">
@@ -72,7 +71,7 @@ function ManageRoom() {
             navigate(-1);
           }}
           onError={(err) => console.log(err)}
-          defaultValues={FORM_DEFAULT.MANAGE_ROOM}
+          defaultValues={loadDefaultValues}
           inputInformations={FORM_INFO.MANAGE_ROOM}
           buttonLabel="저장하기"
         />
