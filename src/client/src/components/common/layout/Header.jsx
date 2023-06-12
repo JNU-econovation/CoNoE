@@ -79,7 +79,7 @@ function Header({ isLoggedIn }) {
                 navigate(routes.myPage);
               }}
             >
-              경주원
+              {localStorage.getItem("username")}
             </strong>{" "}
             님!
           </Welcome>

@@ -60,16 +60,11 @@ class Room(models.Model):
     """
     
     # 방 이름, 방 비밀번호, 방을 만든 유저 이름, 
+    roomId = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=20, blank=False)
     title = models.CharField(max_length=200, blank=False)
-    room_users = ListCharField(
-        base_field=CharField(max_length=10),
-        size = 6,
-        max_length=(6*11)
-    )
     password = models.CharField(max_length=15, blank=False)
-    description = models.TextField(default="")
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -80,8 +75,18 @@ class Room(models.Model):
         
         super().save(*args, **kwargs)
      
-        
-class CheckRoom(models.Model):
-    user_check = JSONField(default=dict)
-    created_on = models.DateField(default=date.today)
+
+class RoomUsers(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    username = models.CharField(max_length=20, blank=False)
+
+
+class Check(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    created_on = models.DateField(default=date.today)
+
+
+class CheckUser(models.Model):
+    check_room = models.ForeignKey(Check, on_delete=models.CASCADE)
+    username = models.CharField(max_length=20, blank=False)
+    is_check = models.BooleanField(default=False)
