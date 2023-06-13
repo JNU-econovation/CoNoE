@@ -27,8 +27,6 @@ const getMedia = async ({
     video: cameraId ? { deviceId: { exact: cameraId } } : true,
   };
 
-  console.log(initialConstrains);
-
   try {
     localStream = await navigator.mediaDevices.getUserMedia(initialConstrains);
 

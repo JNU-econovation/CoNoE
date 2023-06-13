@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import BackdropModal from "../../common/modal/BackdropModal.jsx";
 import SettingModal from "./SettingModal.jsx";
 
-function SideBarBtnContainer({ localStreamRef, cameraArray, micArray }) {
+function RightBtnContainer({ localStreamRef, cameraArray, micArray }) {
   const [isSettingModalOpen, setIsSettingModalOpen] = useState(false);
 
   const handleSettingBtnClick = () => {
@@ -25,4 +25,4 @@ function SideBarBtnContainer({ localStreamRef, cameraArray, micArray }) {
   );
 }
 
-export default SideBarBtnContainer;
+export default RightBtnContainer;
