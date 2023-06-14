@@ -10,6 +10,14 @@ const Container = styled.section`
   color: ${({ theme }) => theme.color.body};
 `;
 
+const LabeledInput = styled.div`
+  padding: 0.5rem 0;
+
+  label {
+    margin-right: 1rem;
+  }
+`;
+
 function SettingModal({ localStreamRef, cameraArray, micArray }) {
   const cameraSelectRef = useRef();
   const micSelectRef = useRef();
@@ -33,7 +41,7 @@ function SettingModal({ localStreamRef, cameraArray, micArray }) {
   return (
     <Container>
       <StyledH3>설정</StyledH3>
-      <div>
+      <LabeledInput>
         <label>카메라</label>
         <select onChange={handleCameraChange} ref={cameraSelectRef}>
           {cameraArray.map((camera) => (
@@ -45,9 +53,9 @@ function SettingModal({ localStreamRef, cameraArray, micArray }) {
             </option>
           ))}
         </select>
-      </div>
+      </LabeledInput>
 
-      <div>
+      <LabeledInput>
         <label>마이크</label>
         <select onChange={handleMicChange} ref={micSelectRef}>
           {micArray.map((mic) => (
@@ -56,7 +64,7 @@ function SettingModal({ localStreamRef, cameraArray, micArray }) {
             </option>
           ))}
         </select>
-      </div>
+      </LabeledInput>
     </Container>
   );
 }

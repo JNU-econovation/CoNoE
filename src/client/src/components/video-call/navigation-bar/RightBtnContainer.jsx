@@ -1,6 +1,19 @@
 import React, { useState } from "react";
 import BackdropModal from "../../common/modal/BackdropModal.jsx";
 import SettingModal from "./SettingModal.jsx";
+import SettingIcon from "../../../assets/SettingIcon.jsx";
+import styled from "styled-components";
+
+const Container = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+`;
+
+const Button = styled.button`
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+`;
 
 function RightBtnContainer({ localStreamRef, cameraArray, micArray }) {
   const [isSettingModalOpen, setIsSettingModalOpen] = useState(false);
@@ -10,9 +23,10 @@ function RightBtnContainer({ localStreamRef, cameraArray, micArray }) {
   };
 
   return (
-    <div>
-      <button>인간</button>
-      <button onClick={handleSettingBtnClick}>설정</button>
+    <Container>
+      <Button onClick={handleSettingBtnClick}>
+        <SettingIcon />
+      </Button>
 
       <BackdropModal open={isSettingModalOpen} setOpen={setIsSettingModalOpen}>
         <SettingModal
@@ -21,7 +35,7 @@ function RightBtnContainer({ localStreamRef, cameraArray, micArray }) {
           micArray={micArray}
         />
       </BackdropModal>
-    </div>
+    </Container>
   );
 }
 
