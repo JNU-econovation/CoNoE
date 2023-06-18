@@ -7,6 +7,9 @@ import CameraOffIcon from "../../../assets/CameraOffIcon.jsx";
 import FaceIdIcon from "../../../assets/FaceIdIcon.jsx";
 import EndCallIcon from "../../../assets/EndCallIcon.jsx";
 import { useNavigate } from "react-router-dom";
+import ModalPortal from "../../common/modal/ModalPortal.jsx";
+import BackdropModal from "../../common/modal/BackdropModal.jsx";
+import FaceIdModal from "../FaceIdModal.jsx";
 
 const Container = styled.div`
   display: flex;
@@ -38,6 +41,7 @@ function VideoCallControlBtnContainer({ localStreamRef }) {
   const navigate = useNavigate();
   const [isMicOn, setIsMicOn] = useState(true);
   const [isCameraOn, setIsCameraOn] = useState(true);
+  const [isFaceIdOpen, setIsFaceIdOpen] = useState(false);
 
   const handleMicBtnClick = () => {
     localStreamRef.current
@@ -60,7 +64,11 @@ function VideoCallControlBtnContainer({ localStreamRef }) {
       <Button onClick={handleCameraBtnClick} isRed={!isCameraOn}>
         {isCameraOn ? <CameraOnIcon /> : <CameraOffIcon />}
       </Button>
-      <Button onClick={() => {}}>
+      <Button
+        onClick={() => {
+          setIsFaceIdOpen(true);
+        }}
+      >
         <FaceIdIcon />
       </Button>
       <Button
@@ -71,6 +79,11 @@ function VideoCallControlBtnContainer({ localStreamRef }) {
       >
         <EndCallIcon />
       </Button>
+      <ModalPortal>
+        <BackdropModal open={isFaceIdOpen} setOpen={setIsFaceIdOpen}>
+          <FaceIdModal />
+        </BackdropModal>
+      </ModalPortal>
     </Container>
   );
 }

@@ -21,9 +21,10 @@ const getMedia = async ({
   myVideoRef,
   setCameraArray,
   setMicArray,
+  micOff,
 }) => {
   const initialConstrains = {
-    audio: micId ? { deviceId: { exact: micId } } : true,
+    audio: micId ? { deviceId: { exact: micId } } : !micOff,
     video: cameraId ? { deviceId: { exact: cameraId } } : true,
   };
 
@@ -34,7 +35,7 @@ const getMedia = async ({
       setMyVideoRef(myVideoRef, localStream);
     }
 
-    if (!micId && !cameraId) {
+    if (!micId && !cameraId && setCameraArray && setMicArray) {
       await getDevices({ setCameraArray, setMicArray });
     }
 
@@ -51,13 +52,15 @@ getMedia.propTypes = {
   myVideoRef: PropTypes.node,
   setCameraArray: PropTypes.func,
   setMicArray: PropTypes.func,
+  micOff: PropTypes.bool,
 };
 
 getMedia.defaultValues = {
   micId: undefined,
   cameraId: undefined,
   myVideoRef: undefined,
-  setCameraArray: () => {},
-  setMicArray: () => {},
+  setCameraArray: undefined,
+  setMicArray: undefined,
+  micOff: false,
 };
 export default getMedia;
