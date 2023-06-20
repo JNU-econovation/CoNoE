@@ -4,6 +4,7 @@ import * as faceapi from "face-api.js";
 
 import StyledH3 from "../../styles/StyledH3.js";
 import getMedia from "../../utils/getMedia.js";
+import DefaultButton from "../common/DefaultButton";
 
 const Container = styled.section`
   padding: 3rem;
@@ -16,15 +17,15 @@ const Article = styled.article`
   align-items: center;
 `;
 
-const FaceVideo = styled.video`
-  //transform: rotateY(180deg);
-`;
-
 const AttendContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+const AttendText = styled.div`
+  margin-bottom: 2rem;
 `;
 
 function FaceIdModal() {
@@ -58,16 +59,6 @@ function FaceIdModal() {
       setIsModelsLoaded(true);
     });
   };
-
-  // const identifyUserByModel = async () => {
-  // const model = await tf.loadLayersModel("/bin_file/model.json");
-  // const model = await tf.loadLayersModel("../../model.json");
-  // console.log(model);
-  // const webcamForModel = await tf.data.webcam(faceRef.current, {
-  //   resizeHeight: 160,
-  //   resizeWidth: 160,
-  // });
-  // };
 
   const handleVideoOnPlay = () => {
     const displaySize = {
@@ -103,16 +94,14 @@ function FaceIdModal() {
         .clearRect(0, 0, videoSize.width, videoSize.height);
 
       results.forEach((result, i) => {
-        if (result._distance < 0.7) return;
-
-        if (result._label === "son") {
+        if (result._label === localStorage.getItem("username")) {
           setIsUserFace(true);
           console.log(result);
         }
 
         const box = resizedDetections[i].detection.box;
         const drawBox = new faceapi.draw.DrawBox(box, {
-          label: result._label.toString(),
+          label: result._distance > 0.7 ? result._label.toString() : "unknown",
         });
         drawBox.draw(canvasRef.current);
       });
@@ -133,22 +122,29 @@ function FaceIdModal() {
           const img = await faceapi.fetchImage(
             `../labeled_images/${label}/${i}.png`
           );
+
           const detections = await faceapi
             .detectSingleFace(img)
             .withFaceLandmarks()
             .withFaceDescriptor();
           descriptions.push(detections.descriptor);
         }
+
         const labeledDescriptors = new faceapi.LabeledFaceDescriptors(
           label,
           descriptions
         );
+
         faceMatcherRef.current = new faceapi.FaceMatcher(
           labeledDescriptors,
           0.7
         );
       })
     );
+  };
+
+  const handleAttendBtnClick = () => {
+    console.log("attend button clicked");
   };
 
   useEffect(() => {
@@ -165,7 +161,7 @@ function FaceIdModal() {
       <StyledH3>출석하기</StyledH3>
       <Article>
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <FaceVideo
+          <video
             ref={videoRef}
             onPlay={handleVideoOnPlay}
             autoPlay
@@ -175,13 +171,18 @@ function FaceIdModal() {
           />
           <canvas ref={canvasRef} style={{ position: "absolute" }} />
         </div>
+
         <AttendContainer>
-          <div>
+          <AttendText>
             {isUserFace
               ? "사용자가 카메라에 인식되었습니다"
               : "사용자가 카메라에 인식되지 않습니다"}
-          </div>
-          <button>출석 불가</button>
+          </AttendText>
+          <DefaultButton
+            onClick={handleAttendBtnClick}
+            text={isUserFace ? "출석하기" : "출석 불가"}
+            disabled={!isUserFace}
+          />
         </AttendContainer>
       </Article>
     </Container>
