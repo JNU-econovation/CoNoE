@@ -1,11 +1,16 @@
 import express from "express";
 import http from "http";
 import SocketIO from "socket.io";
+import modelJSON from "./model.json";
 
 const app = express();
 const httpServer = http.createServer(app);
 
 const PORT = 3001;
+
+app.get("/model", (req, res) => {
+  res.send(modelJSON);
+});
 
 const wsServer = SocketIO(httpServer, {
   cors: {

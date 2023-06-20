@@ -28,12 +28,17 @@ const Container = styled.button`
         background-color: #d13127;
       }
     `}
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.color.addition};
+  }
 `;
 
-function DefaultButton({ text, width, onClick, style, type, isRed }) {
+function DefaultButton({ text, width, onClick, style, type, isRed, disabled }) {
   return (
     <Container
       isRed={isRed}
+      disabled={disabled}
       type={type}
       style={{ width: width, ...style }}
       onClick={onClick}
@@ -50,6 +55,7 @@ DefaultButton.propTypes = {
   style: PropTypes.object,
   type: PropTypes.string,
   isRed: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 DefaultButton.defaultProps = {
@@ -59,6 +65,7 @@ DefaultButton.defaultProps = {
   style: {},
   type: "",
   isRed: false,
+  disabled: false,
 };
 
 export default React.memo(DefaultButton);

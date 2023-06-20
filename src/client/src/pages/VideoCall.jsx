@@ -8,7 +8,7 @@ import getMedia from "../utils/getMedia.js";
 import { WebRTC } from "../utils/WebRTC.js";
 
 const Container = styled.main`
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   padding: 0 2rem;
 
