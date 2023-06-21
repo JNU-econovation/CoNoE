@@ -15,10 +15,18 @@ const Container = styled.main`
   background-color: #202125;
 `;
 
-const UserVideoBox = styled.section`
-  video {
-    transform: rotateY(180deg);
-  }
+const VideoSection = styled.main`
+  width: 100%;
+  height: calc(100% - 6rem);
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const UserVideo = styled.video`
+  width: 50%;
+  transform: rotateY(180deg);
 `;
 
 function VideoCall() {
@@ -73,25 +81,11 @@ function VideoCall() {
 
   return (
     <Container>
-      <UserVideoBox>
-        <video
-          ref={myVideoRef}
-          autoPlay
-          playsInline
-          width="400px"
-          height="400px"
-        />
-      </UserVideoBox>
+      <VideoSection>
+        <UserVideo ref={myVideoRef} autoPlay playsInline />
 
-      <UserVideoBox>
-        <video
-          ref={otherVideoRef}
-          autoPlay
-          playsInline
-          width="400px"
-          height="400px"
-        />
-      </UserVideoBox>
+        <UserVideo ref={otherVideoRef} autoPlay playsInline />
+      </VideoSection>
 
       <NavBar
         localStreamRef={localStreamRef}
