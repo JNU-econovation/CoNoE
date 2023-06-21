@@ -171,16 +171,14 @@ class AuthAPIView(APIView):
         return response
 
 
-class GetUserApiView(viewsets.ReadOnlyModelViewSet):
+class GetUserApiView(APIView):
     """
     User View
     """
-    serializer_class = GetUserSerializer
-    lookup_field = 'userId'
 
-    def retrieve(self, request, userId=None):
-        user = User.objects.get(pk=userId)
-
+    def get(self, request):
+        user = request.user
+        
         serializer = GetUserSerializer(user)
 
         return Response(serializer.data)
@@ -302,7 +300,6 @@ class RoomViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-
 class UserMadeRoomAPIView(generics.RetrieveAPIView):
     """
     Return Rooms made by request.user
@@ -334,7 +331,7 @@ class UserMadeRoomAPIView(generics.RetrieveAPIView):
         serializer = self.get_serializer(queryset, many=True) 
     
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-
+    
 
 class UserJoinRoomAPIView(generics.ListCreateAPIView):
     """
