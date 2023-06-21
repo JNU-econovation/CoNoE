@@ -91,6 +91,16 @@ class PasswordSerializer(serializers.Serializer):
         return bool(pattern.match(pwd))
 
 
+class GetUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "username",
+            "nickname",
+            "email"
+            ]
+
+
 class RoomSerializer(serializers.ModelSerializer):
 
     """
