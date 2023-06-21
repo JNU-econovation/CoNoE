@@ -190,7 +190,7 @@ function FaceIdModal() {
           <DefaultButton
             onClick={handleAttendBtnClick}
             text={isUserFace ? "출석하기" : "출석 불가"}
-            // disabled={!isUserFace}
+            disabled={!isUserFace}
           />
         </AttendContainer>
       </Article>

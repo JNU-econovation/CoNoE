@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ebf7485a-afff-4db8-b77e-55a808c018e9" name="변경" comment="feat: 출결 조회, 출석하기 api 통신">
-      <change afterPath="$PROJECT_DIR$/src/client/src/api/AttendAPI.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/src/api/UserAPI.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/src/api/UserAPI.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client/src/components/common/layout/Footer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/src/components/common/layout/Footer.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client/src/components/common/layout/Layout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/src/components/common/layout/Layout.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/client/src/components/video-call/FaceIdModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/src/components/video-call/FaceIdModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/src/pages/Attendance.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/src/pages/Attendance.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/src/pages/MyPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/src/pages/MyPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/src/pages/SignIn.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/src/pages/SignIn.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client/src/pages/VideoCall.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/src/pages/VideoCall.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,18 +22,26 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "prettierjs.PrettierConfiguration.Package": "/Users/joowonkyung/Documents/econovation/CoNoE/src/client/node_modules/prettier",
-    "settings.editor.selected.configurable": "settings.javascript.prettier"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/joowonkyung/Documents/econovation/CoNoE/src/client/node_modules/prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;
   }
-}]]></component>
+}</component>
   <component name="TaskManager">
+    <task id="LOCAL-00001" summary="feat: 출결 조회, 출석하기 api 통신">
+      <created>1687327155480</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1687327155480</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
