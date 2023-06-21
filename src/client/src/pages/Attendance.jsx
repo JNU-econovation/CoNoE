@@ -2,43 +2,8 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/common/layout/Layout.jsx";
 import StyledH3 from "../styles/StyledH3.js";
 import styled from "styled-components";
-
-const SAMPLE = [
-  {
-    date: "27-05-23",
-    attend: [
-      {
-        name: "econo",
-        isCheck: false,
-      },
-      {
-        name: "yardyard",
-        isCheck: true,
-      },
-      {
-        name: "joowon",
-        isCheck: false,
-      },
-    ],
-  },
-  {
-    date: "27-05-24",
-    attend: [
-      {
-        name: "econo",
-        isCheck: true,
-      },
-      {
-        name: "yardyard",
-        isCheck: false,
-      },
-      {
-        name: "joowon",
-        isCheck: false,
-      },
-    ],
-  },
-];
+import AttendAPI from "../api/AttendAPI.js";
+import { useParams } from "react-router-dom";
 
 const Container = styled.section`
   padding: 5rem 5rem;
@@ -56,15 +21,24 @@ const Table = styled.table`
 `;
 
 const THead = styled.thead`
-  background-color: lightgray;
+  background-color: ${({ theme }) => theme.color.main};
 `;
 
 const THeading = styled.th`
   min-width: 7rem;
   padding: 0.5rem 1rem;
   border: ${({ theme }) => theme.border.table};
-  font-weight: 600;
-  font-size: 1.1rem;
+  font-weight: 500;
+  font-size: 1rem;
+
+  &.head {
+    color: white;
+    border-right: 2px solid white;
+
+    &:last-child {
+      border-right: ${({ theme }) => theme.border.table};
+    }
+  }
 `;
 
 const TBody = styled.tbody``;
@@ -80,12 +54,24 @@ const TData = styled.td`
 `;
 
 function Attendance() {
+  const { roomId } = useParams();
   const [attendData, setAttendData] = useState([]);
   const [userData, setUserData] = useState([]);
+
+  const getAttendData = async () => {
+    const response = await AttendAPI.getRoomAttendInfo(roomId);
+    setAttendData(response);
+    setUserData(response[0].attend.map((attend) => attend.name));
+  };
+
+  const replaceDate = (date) => {
+    const stringArray = date.split("-");
+    return `${stringArray[2]}년 ${stringArray[1]}월 ${stringArray[0]}일`;
+  };
+
   useEffect(() => {
-    setAttendData(SAMPLE);
-    setUserData(SAMPLE[0].attend.map((attend) => attend.name));
-  }, [SAMPLE]);
+    getAttendData();
+  }, [roomId]);
   return (
     <Layout isLoggedIn title="출결 정보" flexStart>
       <Container>
@@ -93,16 +79,18 @@ function Attendance() {
         <Table>
           <THead>
             <TRow>
-              <THeading key="empty" />
+              <THeading key="empty" className="head" />
               {userData.map((userName) => (
-                <THeading key={userName}>{userName}</THeading>
+                <THeading key={userName} className="head">
+                  {userName}
+                </THeading>
               ))}
             </TRow>
           </THead>
           <TBody>
             {attendData.map((data) => (
               <TRow key={data.date}>
-                <THeading key={data.date}>{data.date}</THeading>
+                <THeading key={data.date}>{replaceDate(data.date)}</THeading>
                 {data.attend.map((userData) => (
                   <TData key={userData.name}>
                     {userData.isCheck ? "O" : "X"}

@@ -5,6 +5,8 @@ import * as faceapi from "face-api.js";
 import StyledH3 from "../../styles/StyledH3.js";
 import getMedia from "../../utils/getMedia.js";
 import DefaultButton from "../common/DefaultButton";
+import AttendAPI from "../../api/AttendAPI.js";
+import { useParams } from "react-router-dom";
 
 const Container = styled.section`
   padding: 3rem;
@@ -24,15 +26,17 @@ const AttendContainer = styled.div`
   align-items: center;
 `;
 
-const AttendText = styled.div`
+const AttendResult = styled.div`
   margin-bottom: 2rem;
 `;
 
 function FaceIdModal() {
+  const { roomId } = useParams();
   const localStreamRef = useRef();
   const videoRef = useRef();
   const canvasRef = useRef();
   const faceMatcherRef = useRef();
+  const AttendResultRef = useRef();
 
   const [isUserFace, setIsUserFace] = useState(false);
   const [isModelsLoaded, setIsModelsLoaded] = useState(false);
@@ -94,8 +98,9 @@ function FaceIdModal() {
         .clearRect(0, 0, videoSize.width, videoSize.height);
 
       results.forEach((result, i) => {
-        if (result._label === localStorage.getItem("username")) {
+        if (result._label === "son") {
           setIsUserFace(true);
+          AttendResultRef.current.innerText = "사용자가 인식되었습니다";
           console.log(result);
         }
 
@@ -143,8 +148,14 @@ function FaceIdModal() {
     );
   };
 
-  const handleAttendBtnClick = () => {
+  const handleAttendBtnClick = async () => {
     console.log("attend button clicked");
+    try {
+      await AttendAPI.postAttend(roomId);
+      AttendResultRef.current.innerText = "출석 성공";
+    } catch (e) {
+      AttendResultRef.current.innerText = "출석을 다시 시도해주세요";
+    }
   };
 
   useEffect(() => {
@@ -173,15 +184,13 @@ function FaceIdModal() {
         </div>
 
         <AttendContainer>
-          <AttendText>
-            {isUserFace
-              ? "사용자가 카메라에 인식되었습니다"
-              : "사용자가 카메라에 인식되지 않습니다"}
-          </AttendText>
+          <AttendResult ref={AttendResultRef}>
+            사용자가 카메라에 인식되지 않습니다
+          </AttendResult>
           <DefaultButton
             onClick={handleAttendBtnClick}
             text={isUserFace ? "출석하기" : "출석 불가"}
-            disabled={!isUserFace}
+            // disabled={!isUserFace}
           />
         </AttendContainer>
       </Article>
