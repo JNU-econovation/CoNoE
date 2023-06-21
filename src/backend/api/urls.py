@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
-from .views import RegisterAndObtainTokenView, RoomViewSet, TokenObtainPairView, AuthAPIView, UsernameCheckAPIView, UserMadeRoomAPIView, UserJoinRoomAPIView, CheckAPIView
+from .views import RegisterAndObtainTokenView, RoomViewSet, TokenObtainPairView, AuthAPIView, UsernameCheckAPIView, UserMadeRoomAPIView, UserJoinRoomAPIView, CheckAPIView, GetUserApiView
 
 
 
@@ -18,16 +18,14 @@ urlpatterns += [
     
     path("user/create/username", UsernameCheckAPIView.as_view(), name="check_username"),
     
+    path("user/<int:userId>", GetUserApiView.as_view(actions = {'get': 'retrieve'})),
+
     # post - 로그인, delete - 로그아웃, get - 유저 정보
     path("user/login", AuthAPIView.as_view(), name="login_user"),
     
     path("rooms/<int:roomId>", RoomViewSet.as_view(actions = {'get': 'retrieve'})),
     
-<<<<<<< HEAD
     path("search/room/<int:roomId>", UserMadeRoomAPIView.as_view(), name="user_made_room"),
-=======
-    path("search/room/<int:roomId>", UserMadeRoomAPIView.as_view(), name="user_made_room"),    
->>>>>>> master
     
     path("search/joined/room", UserJoinRoomAPIView.as_view(), name="user_join_room"),
     

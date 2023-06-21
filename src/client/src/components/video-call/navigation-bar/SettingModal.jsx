@@ -10,30 +10,38 @@ const Container = styled.section`
   color: ${({ theme }) => theme.color.body};
 `;
 
+const LabeledInput = styled.div`
+  padding: 0.5rem 0;
+
+  label {
+    margin-right: 1rem;
+  }
+`;
+
 function SettingModal({ localStreamRef, cameraArray, micArray }) {
   const cameraSelectRef = useRef();
   const micSelectRef = useRef();
 
   const handleCameraChange = async () => {
-    await getMedia({
+    localStreamRef.current = await getMedia({
       micId: String(micSelectRef.current.value),
       cameraId: String(cameraSelectRef.value),
-      localStreamRef,
+      localStream: localStreamRef.current,
     });
   };
 
   const handleMicChange = async () => {
-    await getMedia({
+    localStreamRef.current = await getMedia({
       micId: String(micSelectRef.current.value),
       cameraId: String(cameraSelectRef.current.value),
-      localStreamRef,
+      localStream: localStreamRef.current,
     });
   };
 
   return (
     <Container>
       <StyledH3>설정</StyledH3>
-      <div>
+      <LabeledInput>
         <label>카메라</label>
         <select onChange={handleCameraChange} ref={cameraSelectRef}>
           {cameraArray.map((camera) => (
@@ -45,9 +53,9 @@ function SettingModal({ localStreamRef, cameraArray, micArray }) {
             </option>
           ))}
         </select>
-      </div>
+      </LabeledInput>
 
-      <div>
+      <LabeledInput>
         <label>마이크</label>
         <select onChange={handleMicChange} ref={micSelectRef}>
           {micArray.map((mic) => (
@@ -56,7 +64,7 @@ function SettingModal({ localStreamRef, cameraArray, micArray }) {
             </option>
           ))}
         </select>
-      </div>
+      </LabeledInput>
     </Container>
   );
 }

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Clock from "./Clock.jsx";
 import VideoCallControlBtnContainer from "./VideoCallControlBtnContainer.jsx";
-import SideBarBtnContainer from "./SideBarBtnContainer.jsx";
+import RightBtnContainer from "./RightBtnContainer.jsx";
 
 const NavBarContainer = styled.div`
   position: fixed;
@@ -25,7 +25,7 @@ function NavBar({ localStreamRef, cameraArray, micArray }) {
 
       <VideoCallControlBtnContainer localStreamRef={localStreamRef} />
 
-      <SideBarBtnContainer
+      <RightBtnContainer
         localStreamRef={localStreamRef}
         cameraArray={cameraArray}
         micArray={micArray}

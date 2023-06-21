@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const Container = styled.footer`
-  position: absolute;
+  //position: absolute;
   bottom: 0;
 
   width: 100%;

@@ -26,9 +26,9 @@ from .serializers import (
     PasswordSerializer,
     MadeRoomSerializer,
     JoinRoomSerializer,
-    CheckSerializer,
     RoomUserSerializer,
-    CheckUserSerializer
+    CheckUserSerializer,
+    GetUserSerializer
 )
 
 
@@ -50,7 +50,7 @@ class RegisterAndObtainTokenView(APIView):
     authentication_classes = []
 
     def post(self, request, format="json"):
-        
+
         # username 중복 체크
         #id_serializer = UsernameUniqueCheckSerializer(data=request.data)
 
@@ -171,6 +171,20 @@ class AuthAPIView(APIView):
         return response
 
 
+class GetUserApiView(viewsets.ReadOnlyModelViewSet):
+    """
+    User View
+    """
+    serializer_class = GetUserSerializer
+    lookup_field = 'userId'
+
+    def retrieve(self, request, userId=None):
+        user = User.objects.get(pk=userId)
+
+        serializer = GetUserSerializer(user)
+
+        return Response(serializer.data)
+
 class RoomViewSet(viewsets.ModelViewSet):
     """
     Rooms View
@@ -250,7 +264,7 @@ class RoomViewSet(viewsets.ModelViewSet):
         try:
             instance = Room.objects.get(roomId=roomId)
 
-            # 방 비밀번호와 아이디를 맞췄다면
+            # 방 비밀번호와 아이디를 맞췄다면cccc
             if instance.password == password and instance.roomId == int(roomId):
                 """
                 todo : 현재 유저 request.user -> instance의 room_users.append(request.user.username) 하기
@@ -295,7 +309,6 @@ class UserMadeRoomAPIView(generics.RetrieveAPIView):
     queryset = Room.objects.all()
     serializer_class = MadeRoomSerializer
     permission_classes = [IsAuthenticated]
-
     
     def get_queryset(self):
                 
@@ -311,6 +324,7 @@ class UserMadeRoomAPIView(generics.RetrieveAPIView):
 
     
     def retrieve(self, request, *args, **kwargs):
+
         queryset = self.get_queryset()
                 
         if not queryset.exists():

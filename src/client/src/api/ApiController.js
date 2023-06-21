@@ -48,7 +48,7 @@ const refreshAccessToken = async () => {
   } catch (e) {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    window.location("/");
+    window.location = "/";
   }
 };
 

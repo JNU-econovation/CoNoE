@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 
 import Header from "./Header.jsx";
@@ -22,6 +22,7 @@ const Container = styled.div`
 const Main = styled.main`
   width: 100vw;
   min-height: calc(100vh - 200px);
+  padding: 4rem 0;
 
   position: relative;
 
@@ -29,15 +30,21 @@ const Main = styled.main`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  ${({ flexStart }) =>
+    flexStart &&
+    css`
+      justify-content: flex-start;
+    `}
 `;
 
-function Layout({ title, isLoggedIn, children }) {
+function Layout({ title, isLoggedIn, flexStart, children }) {
   return (
     <>
       <PageTitle title={title} />
       <Container>
         <Header className="header" isLoggedIn={isLoggedIn} />
-        <Main>{children}</Main>
+        <Main flexStart={flexStart}>{children}</Main>
         <Footer />
       </Container>
     </>
@@ -47,12 +54,14 @@ function Layout({ title, isLoggedIn, children }) {
 Layout.propTypes = {
   title: PropTypes.string,
   isLoggedIn: PropTypes.bool,
+  flexStart: PropTypes.bool,
   children: PropTypes.node,
 };
 
 Layout.defaultProps = {
   title: "",
   isLoggedIn: true,
+  flexStart: false,
   children: null,
 };
 

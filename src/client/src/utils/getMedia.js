@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
-const setMyVideoRef = (ref, localStreamRef) => {
-  ref.current.srcObject = localStreamRef.current;
+const setMyVideoRef = (ref, localStream) => {
+  ref.current.srcObject = localStream;
 };
 
 const getDevices = async ({ setCameraArray, setMicArray }) => {
@@ -17,32 +17,29 @@ const getDevices = async ({ setCameraArray, setMicArray }) => {
 const getMedia = async ({
   micId,
   cameraId,
-  localStreamRef,
+  localStream,
   myVideoRef,
   setCameraArray,
   setMicArray,
+  micOff,
 }) => {
   const initialConstrains = {
-    audio: micId ? { deviceId: { exact: micId } } : true,
+    audio: micId ? { deviceId: { exact: micId } } : !micOff,
     video: cameraId ? { deviceId: { exact: cameraId } } : true,
   };
 
-  console.log(initialConstrains);
-
   try {
-    localStreamRef.current = await navigator.mediaDevices.getUserMedia(
-      initialConstrains
-    );
+    localStream = await navigator.mediaDevices.getUserMedia(initialConstrains);
 
     if (myVideoRef) {
-      setMyVideoRef(myVideoRef, localStreamRef);
+      setMyVideoRef(myVideoRef, localStream);
     }
 
-    if (!micId && !cameraId) {
+    if (!micId && !cameraId && setCameraArray && setMicArray) {
       await getDevices({ setCameraArray, setMicArray });
     }
 
-    return localStreamRef.current;
+    return localStream;
   } catch (err) {
     console.error(err);
   }
@@ -51,17 +48,19 @@ const getMedia = async ({
 getMedia.propTypes = {
   micId: PropTypes.string,
   cameraId: PropTypes.string,
-  localStreamRef: PropTypes.object.isRequired,
+  localStream: PropTypes.any.isRequired,
   myVideoRef: PropTypes.node,
   setCameraArray: PropTypes.func,
   setMicArray: PropTypes.func,
+  micOff: PropTypes.bool,
 };
 
 getMedia.defaultValues = {
   micId: undefined,
   cameraId: undefined,
   myVideoRef: undefined,
-  setCameraArray: () => {},
-  setMicArray: () => {},
+  setCameraArray: undefined,
+  setMicArray: undefined,
+  micOff: false,
 };
 export default getMedia;

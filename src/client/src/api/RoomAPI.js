@@ -29,10 +29,11 @@ const enterRoom = async (data) => {
 };
 
 const getRoomSetting = async ({ roomId }) => {
-  await ApiController({
+  const { data } = await ApiController({
     url: `api/search/room/${roomId}`,
     method: "GET",
   });
+  return data[0];
 };
 
 export default { getUserEnteredRoom, createRoom, enterRoom, getRoomSetting };

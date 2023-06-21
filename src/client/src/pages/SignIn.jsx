@@ -22,9 +22,7 @@ function Home() {
       <Form
         onSubmit={async (data) => {
           try {
-            console.log(data);
             const response = await UserAPI.login(data);
-            console.log(response);
             setIsLoggedIn(true);
             navigate(routes.home);
           } catch (error) {
