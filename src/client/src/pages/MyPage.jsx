@@ -11,6 +11,7 @@ import { useSetRecoilState } from "recoil";
 import isLoggedInState from "../recoil/atoms/isLoggedInState.js";
 import { useNavigate } from "react-router-dom";
 import routes from "../routes.js";
+import UserAPI from "../api/UserAPI.js";
 
 function MyPage() {
   const setIsLoggedIn = useSetRecoilState(isLoggedInState);
@@ -24,6 +25,15 @@ function MyPage() {
     setIsLoggedIn(false);
     navigate(routes.home);
   };
+
+  const loadDefaultValues = async () => {
+    try {
+      await UserAPI.getUserSettings(localStorage.getItem("username"));
+    } catch (e) {
+      alert(e.message.data);
+      return FORM_DEFAULT.ACCOUNT_SETTINGS;
+    }
+  };
   return (
     <Layout isLoggedIn={true} title="내 설정">
       <FormPageContainer>
@@ -31,7 +41,7 @@ function MyPage() {
         <Form
           onSubmit={(data) => console.log(data)}
           onError={(err) => console.error(err)}
-          defaultValues={FORM_DEFAULT.ACCOUNT_SETTINGS}
+          defaultValues={loadDefaultValues}
           inputInformations={FORM_INFO.ACCOUNT_SETTINGS}
           buttonLabel="수정하기"
         />

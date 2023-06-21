@@ -22,11 +22,11 @@ function Home() {
       <Form
         onSubmit={async (data) => {
           try {
-            const response = await UserAPI.login(data);
+            await UserAPI.login(data);
             setIsLoggedIn(true);
             navigate(routes.home);
           } catch (error) {
-            console.log(error);
+            alert(error.response.data);
           }
         }}
         inputInformations={FORM_INFO.SIGN_IN}

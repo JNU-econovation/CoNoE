@@ -51,4 +51,13 @@ const checkIsIdDuplicated = async (data) => {
   });
 };
 
-export default { register, login, checkIsIdDuplicated };
+const getUserSettings = async (userId) => {
+  const response = await ApiController({
+    url: `/api/user/${userId}`,
+    method: "GET",
+  });
+
+  return response.data;
+};
+
+export default { register, login, checkIsIdDuplicated, getUserSettings };
