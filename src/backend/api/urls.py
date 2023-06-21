@@ -18,7 +18,7 @@ urlpatterns += [
     
     path("user/create/username", UsernameCheckAPIView.as_view(), name="check_username"),
     
-    path("user/<int:userId>", GetUserApiView.as_view(actions = {'get': 'retrieve'})),
+    path("user", GetUserApiView.as_view()),
 
     # post - 로그인, delete - 로그아웃, get - 유저 정보
     path("user/login", AuthAPIView.as_view(), name="login_user"),

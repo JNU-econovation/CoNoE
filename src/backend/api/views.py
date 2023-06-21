@@ -171,16 +171,14 @@ class AuthAPIView(APIView):
         return response
 
 
-class GetUserApiView(viewsets.ReadOnlyModelViewSet):
+class GetUserApiView(APIView):
     """
     User View
     """
-    serializer_class = GetUserSerializer
-    lookup_field = 'userId'
 
-    def retrieve(self, request, userId=None):
-        user = User.objects.get(pk=userId)
-
+    def get(self, request):
+        user = request.user
+        
         serializer = GetUserSerializer(user)
 
         return Response(serializer.data)
