@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ebf7485a-afff-4db8-b77e-55a808c018e9" name="변경" comment="feat: 출결 조회, 출석하기 api 통신">
+      <change afterPath="$PROJECT_DIR$/src/client/src/api/AttendAPI.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client/src/api/UserAPI.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/src/api/UserAPI.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client/src/components/video-call/FaceIdModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/src/components/video-call/FaceIdModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client/src/pages/Attendance.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/src/pages/Attendance.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client/src/pages/MyPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/src/pages/MyPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client/src/pages/SignIn.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/src/pages/SignIn.jsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "prettierjs.PrettierConfiguration.Package": "/Users/joowonkyung/Documents/econovation/CoNoE/src/client/node_modules/prettier",
+    "settings.editor.selected.configurable": "settings.javascript.prettier"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: 출결 조회, 출석하기 api 통신" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: 출결 조회, 출석하기 api 통신" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
