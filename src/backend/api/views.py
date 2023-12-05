@@ -377,7 +377,7 @@ class CheckAPIView(APIView):
         if is_exists:
             check_room = Check.objects.filter(created_on=today, room=room).first()
 
-            # 현재 user만 출석 체크하기 -> 이미 출첵 한 유저면 ㄴㄴㄴ
+            # 현재 user만 출석체크하기 -> 이미 출석체크 한 유저면 출석체크 하지 않는다.
             if not CheckUser.objects.filter(check_room=check_room, username=request.user.username).exists():
                 check_user = CheckUser(check_room=check_room, username=request.user.username, is_check=True)
                 check_user.save()
