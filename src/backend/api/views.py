@@ -262,7 +262,7 @@ class RoomViewSet(viewsets.ModelViewSet):
         try:
             instance = Room.objects.get(roomId=roomId)
 
-            # 방 비밀번호와 아이디를 맞췄다면cccc
+            # 방 비밀번호와 아이디를 맞췄다면
             if instance.password == password and instance.roomId == int(roomId):
                 """
                 todo : 현재 유저 request.user -> instance의 room_users.append(request.user.username) 하기
@@ -285,10 +285,7 @@ class RoomViewSet(viewsets.ModelViewSet):
             else:
                 return Response(
                 {
-                    "1" : instance.password,
-                    "2" : password,
-                    "3" : instance.roomId,
-                    "4" : roomId
+                    "message":"잘못된 방 비밀번호입니다.",
                 },
                     status=status.HTTP_401_UNAUTHORIZED
                 )
