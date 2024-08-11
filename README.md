@@ -30,12 +30,12 @@
 
 2. 필요한 패키지 설치:
    ```bash
-   npm install
+   yarn install
    ```
 
 3. 프론트엔드 서버 실행:
    ```bash
-   npm start
+   yarn dev
    ```
 
 ## 사용 방법
